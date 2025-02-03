@@ -171,7 +171,6 @@ const createTablesQueries = `
 
     `
 
-
 async function createTables() {
     try {
         const client = await pool.connect();
@@ -180,8 +179,7 @@ async function createTables() {
         client.release();
     } catch (err) {
         console.error('Erro ao criar tabelas:', err.message);
-    } finally {
-        await pool.end();}
+    }
 }
 
 createTables();
