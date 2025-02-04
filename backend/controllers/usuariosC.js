@@ -43,10 +43,46 @@ export const atualizarUsuario = async (req, res) => {
     try {
         const { id } = req.params;
         const { nome, email, senha, data, bio } = req.body;
-        const usuarioAtualizado = await pool.query(
-            'UPDATE usuarios SET nome = $1, email = $2, senha = $3, data_nasc = $4, bio = $5 WHERE id = $6 RETURNING *',
-            [nome, email, senha, data, bio, id]
-        );  
+
+        const camposParaAtualizar = [];
+        const valores = [];
+
+         if (nome !== undefined) {
+            camposParaAtualizar.push('nome = $' + (valores.length + 1));
+            valores.push(nome);
+        }
+        if (email !== undefined) {
+            camposParaAtualizar.push('email = $' + (valores.length + 1));
+            valores.push(email);
+        }
+        if (senha !== undefined) {
+            camposParaAtualizar.push('senha = $' + (valores.length + 1));
+            valores.push(senha);
+        }
+        if (data !== undefined) {
+            camposParaAtualizar.push('data_nasc = $' + (valores.length + 1));
+            valores.push(data);
+        }
+        if (bio !== undefined) {
+            camposParaAtualizar.push('bio = $' + (valores.length + 1));
+            valores.push(bio);
+        }
+
+        // Se nenhum campo for fornecido, retorna um erro
+        if (camposParaAtualizar.length === 0) {
+            return res.status(400).json({ erro: 'Nenhum campo fornecido para atualização' });
+        }
+
+        valores.push(id);
+
+        const query = `
+            UPDATE usuarios
+            SET ${camposParaAtualizar.join(', ')}
+            WHERE id = $${valores.length}
+            RETURNING *;
+        `;
+
+        const usuarioAtualizado = await pool.query(query, valores);
         res.json(usuarioAtualizado.rows[0]);
     } catch (err) {
         console.error(err.message);

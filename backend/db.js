@@ -36,6 +36,7 @@ const createTablesQueries = `
     CREATE TABLE IF NOT EXISTS reviews (
         id SERIAL PRIMARY KEY,
         nota DECIMAL NOT NULL,
+        texto VARCHAR(10000),
         idFilme INT REFERENCES filmes(id) ON DELETE CASCADE,
         idUsuario INT REFERENCES usuarios(id) ON DELETE CASCADE,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -97,13 +98,6 @@ const createTablesQueries = `
         idSeguido INT REFERENCES usuarios(id) ON DELETE CASCADE, 
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         PRIMARY KEY (idSeguidor, idSeguido)
-    );
-
-    CREATE TABLE IF NOT EXISTS filmes_users (
-        idUser INT REFERENCES usuarios(id) ON DELETE CASCADE,
-        idFilme INT REFERENCES filmes(id) ON DELETE CASCADE, 
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        PRIMARY KEY (idUser, idFilme)
     );
 
     CREATE TABLE IF NOT EXISTS filmes_listas (
