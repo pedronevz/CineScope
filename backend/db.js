@@ -18,7 +18,7 @@ const createTablesQueries = `
         senha VARCHAR(100) NOT NULL,
         data_nasc DATE NOT NULL,
         foto_perfil TEXT,
-        bio VARCHAR(500) NOT NULL,
+        bio VARCHAR(500),
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
     

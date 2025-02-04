@@ -5,11 +5,25 @@ import pool from '../db.js';
 export const criarUsuario = async (req, res) => {
     try {
         const { nome, email, senha, data, bio } = req.body;
+
+        // Verifica se o nome já existe
+        const nomeExiste = await pool.query('SELECT * FROM usuarios WHERE nome = $1', [nome]);
+        if(nomeExiste.rows.length !== 0){
+            return res.status(404).json({ erro: 'Nome já existente!' });
+        }
+
+        // Verifica se o email já existe
+        const emailExiste = await pool.query('SELECT * FROM usuarios WHERE nome = $1', [nome]);
+        if(emailExiste.rows.length !== 0){
+            return res.status(404).json({ erro: 'Email já existente!' });
+        }
+
         const novoUsuario = await pool.query(
             'INSERT INTO usuarios (nome, email, senha, data_nasc, bio) VALUES ($1, $2, $3, $4, $5) RETURNING *',
             [nome, email, senha, data, bio]
         );
         res.json(novoUsuario.rows[0]);
+
     } catch (err) {
         console.error(err.message);
         res.status(500).send('Erro no servidor');
@@ -21,10 +35,18 @@ export const obterUsuarios = async (req, res) => {
     try {
         const todosUsuarios = await pool.query('SELECT * FROM usuarios');
         res.json(todosUsuarios.rows);
+
+        if(todosUsuarios.rows.length === 0){
+            return res.status(404).json({ erro: 'Não há usuários!' });
+        }
+
     } catch (err) {
         console.error(err.message);
         res.status(500).send('Erro no servidor');
     }
+
+    
+
 };
 
 export const obterUsuarioPorId = async (req, res) => {
@@ -32,6 +54,11 @@ export const obterUsuarioPorId = async (req, res) => {
         const { id } = req.params;
         const usuario = await pool.query('SELECT * FROM usuarios WHERE id = $1', [id]);
         res.json(usuario.rows[0]);
+
+        if(usuario.rows.length === 0){
+            return res.status(404).json({ erro: 'Usuário não encontrado!' });
+        }
+
     } catch (err) {
         console.error(err.message);
         res.status(500).send('Erro no servidor');
@@ -46,6 +73,12 @@ export const atualizarUsuario = async (req, res) => {
 
         const camposParaAtualizar = [];
         const valores = [];
+
+        // Verifica se o usuário existe
+        const usuario = await pool.query('SELECT * FROM usuarios WHERE id = $1', [id]);
+        if (usuario.rows.length === 0) {
+            return res.status(404).json({ erro: 'Usuário não encontrado' });
+        }
 
          if (nome !== undefined) {
             camposParaAtualizar.push('nome = $' + (valores.length + 1));
@@ -94,8 +127,16 @@ export const atualizarUsuario = async (req, res) => {
 export const deletarUsuario = async (req, res) => {
     try {
         const { id } = req.params;
+
+        // Verifica se o usuário existe
+        const usuario = await pool.query('SELECT * FROM usuarios WHERE id = $1', [id]);
+        if (usuario.rows.length === 0) {
+            return res.status(404).json({ erro: 'Usuário não encontrado' });
+        }
+
         await pool.query('DELETE FROM usuarios WHERE id = $1', [id]);
         res.json('Usuário deletado com sucesso!');
+      
     } catch (err) {
         console.error(err.message);
         res.status(500).send('Erro no servidor');
@@ -104,7 +145,7 @@ export const deletarUsuario = async (req, res) => {
 
 export const deletarTodosUsuarios = async (req, res) => {
     try {
-        await pool.query('DELETE * FROM usuarios');
+        await pool.query('DELETE FROM usuarios');
         res.json('Usuários deletados com sucesso!');
     } catch (err) {
         console.error(err.message);

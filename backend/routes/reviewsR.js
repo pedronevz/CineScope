@@ -11,10 +11,10 @@ import {
 const router = express.Router();
 
 // Rotas
-router.post('/', criarReview);
-router.get('/filme/:idFilme/usuario/:idUsuario:id/:id2', obterReviewFilmePorUsuario);
-router.get('/:idUsuario', obterReviewPorUsuario);
-router.get('/:idFilme', obterReviewPorFilme);
+router.post('/filme/:idfilme/usuario/:idusuario', criarReview);
+router.get('/filme/:idfilme/usuario/:idusuario', obterReviewFilmePorUsuario);
+router.get('/usuario/:idusuario', obterReviewPorUsuario);
+router.get('/filme/:idfilme', obterReviewPorFilme);
 router.put('/:id', atualizarReview);
 router.delete('/:id', deletarReview);
 
