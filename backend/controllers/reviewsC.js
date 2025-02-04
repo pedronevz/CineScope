@@ -60,8 +60,6 @@ export const obterReviewPorFilme = async (req, res) => {
 
         res.json(todasReviewsFilme.rows);
 
-        
-
     } catch (err) {
         console.error(err.message);
         res.status(500).send('Erro no servidor');
@@ -98,7 +96,7 @@ export const atualizarReview = async (req, res) => {
         if (review.rows.length === 0) {
             return res.status(404).json({ erro: 'Review não encontrada' });
         }
-        
+
          if (nota !== undefined) {
             camposParaAtualizar.push('nota = $' + (valores.length + 1));
             valores.push(nota);

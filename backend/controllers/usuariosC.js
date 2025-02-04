@@ -44,9 +44,6 @@ export const obterUsuarios = async (req, res) => {
         console.error(err.message);
         res.status(500).send('Erro no servidor');
     }
-
-    
-
 };
 
 export const obterUsuarioPorId = async (req, res) => {
@@ -58,6 +55,32 @@ export const obterUsuarioPorId = async (req, res) => {
         if(usuario.rows.length === 0){
             return res.status(404).json({ erro: 'Usuário não encontrado!' });
         }
+
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Erro no servidor');
+    }
+};
+
+export const login = async (req, res) => {
+    try {
+        const { nome, senha } = req.body;
+
+        if (nome === undefined) {
+            return res.status(400).json({ erro: 'Preencha o nome de usuário!' })
+        }
+
+        if (senha === undefined) {
+            return res.status(400).json({ erro: 'Preencha a senha!' })
+        }
+
+        const usuario = await pool.query('SELECT * FROM usuarios WHERE nome = $1 AND senha = $2', [nome, senha]);
+
+        if(usuario.rows.length === 0){
+            return res.status(404).json({ erro: 'Nome ou senha incorretos!' });
+        }
+
+        res.json(usuario.rows[0]);        
 
     } catch (err) {
         console.error(err.message);
