@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil do Usuário</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f3f4f6;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #1f2937;
+            color: #ffffff;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            background-color: #374151;
+            padding: 0.5rem;
+        }
+
+        nav a {
+            color: #ffffff;
+            text-decoration: none;
+            margin: 0 1rem;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        nav a:hover {
+            background-color: #4b5563;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 1rem;
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #e5e7eb;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .profile-pic {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #374151;
+        }
+
+        .user-info {
+            flex: 1;
+            position: relative;
+        }
+
+        .username {
+            font-size: 1.6rem;
+            color: #1f2937;
+        }
+
+        .bio {
+            font-size: 1rem;
+            color: #374151;
+            background: #f9fafb;
+            padding: 0.5rem;
+            border-radius: 5px;
+            margin-top: 0.5rem;
+            max-width: 500px;
+        }
+
+        .stats {
+            display: flex;
+            flex-direction: row;
+            position: absolute;
+            top: 0;
+            right: 0;
+            gap: 1.2rem;
+            margin-top: -0.50rem;
+        }
+
+        .stats-box {
+            background: #374151;
+            padding: 0.5rem;
+            border-radius: 8px;
+            text-align: center;
+            width: 80px;
+            font-size: 1rem;
+        }
+
+        .stats-box strong {
+            display: block;
+            font-size: 1.2rem;
+            color: #e4dcdc;
+        }
+
+        .stats-box .label {
+            font-size: 1rem;
+            color: #414040;
+            margin-top: 0.5rem;
+        }
+
+        .content {
+            display: flex;
+            justify-content: space-between;
+            gap: 2rem;
+        }
+
+        .section {
+            flex: 1;
+            background: #f9fafb;
+            padding: 1rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-title {
+            margin-bottom: 1rem;
+            color: #1f2937;
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 0.5rem;
+            text-align: center;
+        }
+
+        .list-item {
+            background: #ffffff;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .list-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .list-item h3 {
+            margin: 0;
+            color: #0a0a0a;
+        }
+
+        .list-item p {
+            color: #6b7280;
+        }
+
+        .btn-ver-mais {
+            display: flex;
+            padding: 0.5rem 1rem;
+            background-color: #374151;
+            color: #ffffff;
+            border-radius: 5px;
+            text-decoration: none;
+            text-align: center;
+            margin-top: 1rem;
+            transition: background-color 0.3s;
+            float: right;
+        }
+
+        .btn-ver-mais:hover {
+            background-color: #4b5563;
+        }
+
+        .btn-atualizar-perfil {
+            display: flex;
+            padding: 0.5rem 1rem;
+            background-color: #374151;
+            color: #ffffff;
+            border-radius: 5px;
+            text-decoration: none;
+            text-align: center;
+            margin-top: 3rem;
+            transition: background-color 0.3s;
+
+        }
+
+        .btn-atualizar-perfil:hover {
+            background-color: #4b5563;
+        }
+
+        @media (max-width: 900px) {
+            .content {
+                flex-direction: column;
+            }
+
+            .stats {
+                flex-direction: row;
+                gap: 1rem;
+                position: static;
+                margin-top: 1rem;
+            }
+
+            .stats-box {
+                width: 100px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>CineScope</h1>
+    </header>
+    <nav>
+        <a href="home.html">Home/Filmes</a>
+        <a href="usuario.html">Usuários</a>
+        <a href="listasG.html">Listas</a>
+        <a href="reviewsG.html">Reviews</a>
+        <a href="#">Notícias</a>
+    </nav>
+    
+    <div class="container">
+        <div class="profile-header">
+            <img src="caminho/para/foto.jpg" alt="" class="profile-pic">
+            <div class="user-info">
+                <h2 class="username">Nome do Usuário</h2>
+                <p class="bio">bio cinéfilo</p>
+            </div>
+            <div class="stats">
+                <div class="stats-box">
+                    <strong>1,250</strong> Seguidores
+                </div>
+                <div class="stats-box">
+                    <strong>530</strong> Seguindo
+                </div>
+            </div>
+            <a href="atualizaPerfil.html" class="btn-atualizar-perfil">Atualizar Perfil</a>
+        </div>
+        
+        <div class="content">
+            <div class="section">
+                <h2 class="section-title">Minhas Reviews</h2>
+                <div class="list-item">
+                    <h3>Interstellar (2014)</h3>
+                    <p>"Uma obra-prima da ficção científica! Nota 9.5/10"</p>
+                </div>
+                <div class="list-item">
+                    <h3>Parasita (2019)</h3>
+                    <p>"Incrível do começo ao fim! Nota 10/10"</p>
+                </div>
+                <a href="reviewsUser.html" class="btn-ver-mais">Ver Mais</a>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title">Minhas Listas</h2>
+                <div class="list-item">
+                    <h3>Filmes Favoritos</h3>
+                    <p>Lista de filmes que mais gostei.</p>
+                </div>
+                <div class="list-item">
+                    <h3>Assistir em 2025</h3>
+                    <p>Filmes que quero assistir em 2025.</p>
+                </div>
+                <a href="listasUser.html" class="btn-ver-mais">Ver Mais</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

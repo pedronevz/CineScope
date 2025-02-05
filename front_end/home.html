@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Letterbox Database</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f3f4f6;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #1f2937;
+            color: #ffffff;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            background-color: #374151;
+            padding: 0.5rem;
+        }
+
+        nav a {
+            color: #ffffff;
+            text-decoration: none;
+            margin: 0 1rem;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        nav a:hover {
+            background-color: #4b5563;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 1rem;
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #dad1ce;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            border: 1px solid #ebe6e5;
+            border-radius: 8px;
+            padding: 1rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .card h3 {
+            margin: 0 0 1rem;
+            color: #1f2937;
+        }
+
+        .card p {
+            color: #6b7280;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background-color: #bb2e03;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 1rem;
+            transition: background-color 0.3s;
+        }
+
+        .button:hover {
+            background-color: #5a0b0b;
+        }
+
+    </style>
+</head>
+<body>
+    <header>
+        <h1>CineScope</h1>
+    </header>
+    <nav>
+        <a href="home.html">Home/Filmes</a>
+        <a href="usuario.html">Usuários</a>
+        <a href="listasG.html">Listas</a>
+        <a href="reviewsG.html">Reviews</a>
+        <a href="#">Notícias</a>
+    </nav>
+    <div class="container">
+        <h2>Bem vindo!</h2>
+        <p>Explore movies, create lists, and share your reviews with others.</p>
+
+        <h2>Popular Movies</h2>
+        <div class="grid">
+            <div class="card">
+                <!--img src=""-->
+                <h3>Movie Title</h3>
+                <p>Year: 2022</p>
+                <p>Genre: Action</p>
+                <a href="filme1.html" class="button">View Details</a>
+            </div>
+            <div class="card">
+                <!--img src=""-->
+                <h3>Another Movie</h3>
+                <p>Year: 2021</p>
+                <p>Genre: Drama</p>
+                <a href="#" class="button">View Details</a>
+            </div>
+            <div class="card">
+                <!--img src=""-->
+                <h3>Some Other Movie</h3>
+                <p>Year: 2020</p>
+                <p>Genre: Comedy</p>
+                <a href="" class="button">View Details</a>
+            </div>
+            <div class="card">
+                <!--img src=""-->
+                <h3>Some Other Movie</h3>
+                <p>Year: 2020</p>
+                <p>Genre: Comedy</p>
+                <a href="#" class="button">View Details</a>
+        </div>
+    </div>
+</body>
+</html>
