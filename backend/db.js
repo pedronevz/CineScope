@@ -13,10 +13,9 @@ const pool = new Pool({
 async function createTables() {
     const client = await pool.connect();
     try {
-        // Inicia uma transação
         await client.query('BEGIN');
 
-        // Cria as tabelas na ordem correta
+        // Cria as tabelas
         await client.query(`
             CREATE TABLE IF NOT EXISTS generos (
                 id SERIAL PRIMARY KEY,
