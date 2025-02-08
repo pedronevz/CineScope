@@ -17,3 +17,77 @@ export const obterFilmes = async (req, res) => {
         res.status(500).send('Erro no servidor');
     }
 };
+
+export const obterFilmeDetalhado = async (req, res) => {
+    const { id } = req.params; 
+
+    try {
+        const client = await pool.connect();
+
+        const filmeQuery = `
+            SELECT f.*, g.nome AS genero, d.nome AS diretor
+            FROM filmes f
+            JOIN generos g ON f.genero = g.id
+            JOIN diretores d ON f.diretor = d.id
+            WHERE f.id = $1;
+        `;
+
+        const filmeResult = await client.query(filmeQuery, [id]);
+        const filme = filmeResult.rows[0];
+
+        if (!filme) {
+            return res.status(404).json({ erro: 'Filme não encontrado' });
+        }
+
+        // Busca atores
+        const atoresQuery = `
+            SELECT a.nome
+            FROM atores a
+            JOIN filmes_atores fa ON a.id = fa.idAtor
+            WHERE fa.idFilme = $1;
+        `;
+
+        const atoresResult = await client.query(atoresQuery, [id]);
+        const atores = atoresResult.rows.map(row => row.nome);
+
+        // Busca streamings
+        const streamingQuery = `
+            SELECT s.nome
+            FROM servicos_streaming s
+            JOIN filmes_streaming fs ON s.id = fs.idStreaming
+            WHERE fs.idFilme = $1;
+        `;
+        const streamingResult = await client.query(streamingQuery, [id]);
+        const streamings = streamingResult.rows.map(row => row.nome);
+
+        // 4. Busca as reviews
+        const reviewsQuery = `
+            SELECT r.nota, r.texto, u.nome AS usuario
+            FROM reviews r
+            JOIN usuarios u ON r.idUsuario = u.id
+            WHERE r.idFilme = $1;
+        `;
+        const reviewsResult = await client.query(reviewsQuery, [id]);
+        const reviews = reviewsResult.rows;
+
+        // 5. Monta o objeto
+        const resposta = {
+            id: filme.id,
+            titulo: filme.titulo,
+            ano: filme.ano,
+            sinopse: filme.sinopse,
+            duracao: filme.duracao,
+            nota_media: filme.nota_media,
+            genero: filme.genero,
+            diretor: filme.diretor,
+            atores: atores,
+            streamings: streamings,
+            reviews: reviews,
+        };
+
+        res.json(resposta);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Erro no servidor');
+    }
+};

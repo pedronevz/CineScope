@@ -54,7 +54,7 @@ async function createTables() {
                 ano INT NOT NULL,
                 nota_media DECIMAL DEFAULT NULL,
                 sinopse VARCHAR(1000) NOT NULL,
-                foto_capa TEXT,
+                foto_capa BYTEA,
                 duracao TIME NOT NULL,
                 genero INT REFERENCES generos(id) NOT NULL,
                 diretor INT REFERENCES diretores(id) NOT NULL,
@@ -69,7 +69,8 @@ async function createTables() {
                 texto VARCHAR(10000),
                 idFilme INT REFERENCES filmes(id) ON DELETE CASCADE,
                 idUsuario INT REFERENCES usuarios(id) ON DELETE CASCADE,
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                UNIQUE (idFilme, idUsuario)
             );
         `);
 
@@ -95,7 +96,7 @@ async function createTables() {
         await client.query(`
             CREATE TABLE IF NOT EXISTS atores (
                 id SERIAL PRIMARY KEY,
-                nome VARCHAR(100) NOT NULL, 
+                nome VARCHAR(100) UNIQUE NOT NULL, 
                 data_nasc DATE NOT NULL,
                 foto_perfil TEXT,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -114,7 +115,7 @@ async function createTables() {
         await client.query(`
             CREATE TABLE IF NOT EXISTS servicos_streaming (
                 id SERIAL PRIMARY KEY,
-                nome VARCHAR(100) NOT NULL, 
+                nome VARCHAR(100) UNIQUE NOT NULL, 
                 url VARCHAR(100) NOT NULL, 
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             );
@@ -166,7 +167,7 @@ async function createTables() {
         `);
 
         await client.query(`
-            CREATE TABLE IF NOT EXISTS filmes_str (
+            CREATE TABLE IF NOT EXISTS filmes_streaming (
                 idFilme INT REFERENCES filmes(id) ON DELETE CASCADE, 
                 idStreaming INT REFERENCES servicos_streaming(id) ON DELETE CASCADE,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -243,8 +244,11 @@ async function createTables() {
                 (2, 5, 'Coitado do Luke, mal sabe que quer matar seu próprio pai!', 4, 1),
                 (3, 5, 'Gente, coitadinho do cervo :(', 1, 1),
                 (4, 4, 'O MAIOR PILOTO DAS ESTRELAS. É DE FAMÍLIA', 4, 2),
-                (5, 4.5, 'meu amigo, pense numa fofoca', 5, 4)                
-        `); 
+                (5, 4.5, 'meu amigo, pense numa fofoca', 5, 4)
+            ON CONFLICT (idfilme, idusuario) DO NOTHING;                
+        `);
+
+        
 
         await client.query('COMMIT');
         console.log('Tabelas criadas e dados iniciais inseridos com sucesso!');
