@@ -110,6 +110,37 @@
         .btn-delete:hover {
             background-color: #dc2626;
         }
+
+        .btn-add {
+            display: inline-block;
+            margin-left: auto;
+            margin-right: 0;
+            padding: 0.8rem 2rem;
+            background-color: #255527;
+            color: white;
+            border: 2px solid #255527;
+            border-radius: 30px;
+            text-align: center;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .btn-add:hover {
+            background-color: #45a049;
+            border-color: #45a049;
+            transform: scale(1.05);
+        }
+
+        .btn-add:focus {
+            outline: none;
+        }
+
+        .add-review-container {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 2rem;
+        }
     </style>
 </head>
 <body>
@@ -126,6 +157,11 @@
     
     <div class="container">
         <h2 class="section-title">Minhas Reviews</h2>
+        <div class="add-review-container">
+            <a href="adicionarReview.html">
+                <button class="btn btn-add">Adicionar Review</button>
+            </a>
+        </div>
         <div class="list-item">
             <h3>Interstellar (2014)</h3>
             <p>"Uma obra-prima da ficção científica! Nota 9.5/10"</p>

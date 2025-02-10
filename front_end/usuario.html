@@ -212,6 +212,20 @@
                 width: 100px;
             }
         }
+        .btn-logout {
+            background-color: #d32f2f;
+            color: white;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-left: 10px;
+        }
+
+        .btn-logout:hover {
+            background-color: #b71c1c;
+        }
     </style>
 </head>
 <body>
@@ -224,8 +238,8 @@
         <a href="listasG.html">Listas</a>
         <a href="reviewsG.html">Reviews</a>
         <a href="#">Notícias</a>
+        <button id="logout-btn" class="btn-logout">Sair</button>
     </nav>
-    
     <div class="container">
         <div class="profile-header">
             <img src="caminho/para/foto.jpg" alt="" class="profile-pic">
@@ -272,5 +286,6 @@
             </div>
         </div>
     </div>
+    <script src="usuario.js"></script>
 </body>
 </html>

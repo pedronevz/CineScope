@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -116,29 +116,29 @@
     </style>
 </head>
 <body>
-    <header>
+    <header id="header">
         <h1>CineScope</h1>
     </header>
-    <nav>
-        <a href="home.html">Home/Filmes</a>
-        <a href="usuario.html">Usuários</a>
-        <a href="listasG.html">Listas</a>
-        <a href="reviewsG.html">Reviews</a>
-        <a href="#">Notícias</a>
+    <nav id="nav">
+        <a id="home-link" href="home.html">Home/Filmes</a>
+        <a id="usuarios-link" href="usuario.html">Usuários</a>
+        <a id="listas-link" href="listasG.html">Listas</a>
+        <a id="reviews-link" href="reviewsG.html">Reviews</a>
+        <a id="noticias-link" href="#">Notícias</a>
     </nav>
-    <div class="container">
-        <div class="form-container">
-            <h2>Login</h2>
-            <form action="#" method="POST">
-                <input type="email" name="email" placeholder="Email" required>
-                <input type="password" name="password" placeholder="Senha" required>
-                <button type="submit">Entrar</button>
+    <div id="container" class="container">
+        <div id="form-container" class="form-container">
+            <h2 id="login-title">Login</h2>
+            <form id="login-form" method="POST">
+                <input id="nome" type="text" name="nome" placeholder="Nome" required>
+                <input id="senha" type="password" name="senha" placeholder="Senha" required>
+                <button id="login-button" type="submit">Entrar</button>
             </form>
-            <div class="toggle-link">
-                <p>Não tem uma conta? <a href="cadastro.html">Cadastre-se</a></p>
+            <div id="toggle-link" class="toggle-link">
+                <p>Não tem uma conta? <a id="cadastro-link" href="cadastro.html">Cadastre-se</a></p>
             </div>
         </div>
     </div>
+    <script src="login.js"></script>
 </body>
 </html>
-

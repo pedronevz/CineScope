@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f3f4f6;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #1f2937;
+            color: #ffffff;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            background-color: #374151;
+            padding: 0.5rem;
+        }
+
+        nav a {
+            color: #ffffff;
+            text-decoration: none;
+            margin: 0 1rem;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        nav a:hover {
+            background-color: #4b5563;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 1rem;
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .movie-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1.5rem;
+        }
+
+        .movie-header img {
+            width: 200px;
+            border-radius: 8px;
+        }
+
+        .movie-info {
+            flex-grow: 1;
+        }
+
+        .movie-info h1 {
+            margin: 0;
+            color: #1f2937;
+        }
+
+        .movie-info p {
+            margin: 0.5rem 0;
+            color: #6b7280;
+        }
+
+        .reviews {
+            margin-top: 2rem;
+        }
+
+        .review {
+            border-top: 1px solid #e5e7eb;
+            padding: 1rem 0;
+        }
+
+        .review p {
+            margin: 0.2rem 0;
+        }
+
+        .rating {
+            font-weight: bold;
+            color: #1d4ed8;
+        }
+    </style>
+</head>
+<body id="body">
+    <header id="header">
+        <h1 id="movie-title">Movie Details</h1>
+    </header>
+    <nav id="nav">
+        <a id="home-link" href="home.html">Home/Filmes</a>
+        <a id="usuarios-link" href="usuario.html">Usuários</a>
+        <a id="listas-link" href="listasG.html">Listas</a>
+        <a id="reviews-link" href="reviewsG.html">Reviews</a>
+        <a id="noticias-link" href="#">Notícias</a>
+    </nav>
+    <div class="container" id="container">
+        <div class="movie-header" id="movie-header">
+            <!--<img id="movie-poster" src="movie_poster.jpg" alt="Movie Poster">-->
+            <div class="movie-info" id="movie-info">
+                <h1 id="movie-name">Nome do filme</h1>
+                <p id="genre"><strong>Gênero:</strong></p>
+                <p id="duration"><strong>Duração:</strong></p>
+                <p id="streaming"><strong>Streamings:</strong></p>
+                <p id="rating"><strong>Nota:</strong></p>
+                <p id="director"><strong>Diretor:</strong> <a href="diretor1.html">Director Name</a></p>
+                <p id="actors"><strong>Atores:</strong> <a href="ator1.html">Actor 1</a>, <a href="actor2.html">Actor 2</a>, <a href="actor3.html">Actor 3</a></p>
+            </div>
+        </div>
+        <h2 id="synopsis-title">Sinopse</h2>
+        <p id="synopsis"></p>
+        
+        <h2 id="reviews-title">Reviews</h2>
+        <div class="reviews" id="reviews"></div>
+    </div>
+
+    <script src="obterDetalhes.js"></script>
+</body>
+</html>
