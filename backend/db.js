@@ -6,7 +6,6 @@ const pool = new Pool({
     host: 'localhost',
     database: 'cinescope',
     password: '12345678', 
-    password: '0260902003',
     port: 5432,
 });
 
@@ -249,7 +248,33 @@ async function createTables() {
             ON CONFLICT (idfilme, idusuario) DO NOTHING;                
         `);
 
-        
+        await client.query(`
+            INSERT INTO atores (id, nome, data_nasc)
+            VALUES
+                (1, 'Nicholas Hoult', '1989-12-07'),
+                (2, 'Emma Stone', '1988-11-06'),  
+                (3, 'Tom Hanks', '1956-07-09'),
+                (4, 'Ryan Gosling', '1980-11-12'),
+                (5, 'Toni Collette', '1972-11-01'),                
+                (6, 'James Stewart', '1908-05-20'),
+                (7, 'Mark Hamill', '1951-09-25'),
+                (8, 'Carrie Fisher', '1956-10-21')             
+            ON CONFLICT (nome) DO NOTHING;
+        `);
+       
+        await client.query(`
+            INSERT INTO filmes_atores (idfilme, idator)
+            VALUES
+                (1, 1),
+                (2, 2),
+                (3, 3),
+                (2, 4),
+                (1, 5),
+                (5, 6),
+                (4, 7),
+                (4, 8)
+            ON CONFLICT (idfilme, idator) DO NOTHING;
+        `);
 
         await client.query('COMMIT');
         console.log('Tabelas criadas e dados iniciais inseridos com sucesso!');

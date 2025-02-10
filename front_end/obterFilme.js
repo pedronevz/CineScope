@@ -21,7 +21,6 @@ document.addEventListener("DOMContentLoaded", async function () {
             card.innerHTML = `
                 <h3>${filme.titulo}</h3>
                 <p>Ano: ${filme.ano}</p>
-                <p>Gênero: ${filme.genero || "Desconhecido"}</p>
                 <a href="filme.html?id=${filme.id}" class="button">Ver Mais</a>
             `;
 

@@ -25,9 +25,9 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function preencherDetalhesFilme(filme) {
-        document.getElementById('movie-title').innerText = filme.titulo;
+        document.getElementById('movie-name').innerText = filme.titulo;
         document.getElementById('genre').innerText = `Gênero: ${filme.genero}`;
-        document.getElementById('duration').innerText = `Duração: ${filme.duracao} min`;
+        document.getElementById('duration').innerText = `Duração: ${filme.duracao}h`;
         document.getElementById('streaming').innerText = `Streamings: ${filme.streamings.join(', ')}`;
         document.getElementById('rating').innerText = `Nota: ${filme.nota_media}`;
         document.getElementById('director').innerHTML = `Diretor: <a href="diretor1.html">${filme.diretor}</a>`;
