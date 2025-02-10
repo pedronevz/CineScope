@@ -60,7 +60,7 @@ export const obterFilmeDetalhado = async (req, res) => {
         const streamingResult = await client.query(streamingQuery, [id]);
         const streamings = streamingResult.rows.map(row => row.nome);
 
-        // 4. Busca as reviews
+        // Busca as reviews
         const reviewsQuery = `
             SELECT r.nota, r.texto, u.nome AS usuario
             FROM reviews r
@@ -70,7 +70,10 @@ export const obterFilmeDetalhado = async (req, res) => {
         const reviewsResult = await client.query(reviewsQuery, [id]);
         const reviews = reviewsResult.rows;
 
-        // 5. Monta o objeto
+        // Converte a foto_capa (buffer) para base64
+        const fotoCapaBase64 = filme.foto_capa ? filme.foto_capa.toString('base64') : null;
+
+        // Monta o objeto
         const resposta = {
             id: filme.id,
             titulo: filme.titulo,
@@ -80,6 +83,7 @@ export const obterFilmeDetalhado = async (req, res) => {
             nota_media: filme.nota_media,
             genero: filme.genero,
             diretor: filme.diretor,
+            foto_capa: fotoCapaBase64,
             atores: atores,
             streamings: streamings,
             reviews: reviews,

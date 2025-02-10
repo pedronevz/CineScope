@@ -33,6 +33,12 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('director').innerHTML = `Diretor: <a href="diretor1.html">${filme.diretor}</a>`;
         document.getElementById('actors').innerHTML = `Atores: ${filme.atores.map((ator, index) => `<a href="ator${index + 1}.html">${ator}</a>`).join(', ')}`;
         document.getElementById('synopsis').innerText = filme.sinopse;
+        
+        if (filme.foto_capa) {
+            const fotoCapa = document.getElementById('movie-poster');
+            fotoCapa.src = `data:image/jpeg;base64,${filme.foto_capa}`;
+        }
+        
         preencherReviews(filme.reviews);
     }
 

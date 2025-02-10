@@ -20,7 +20,7 @@ async function dropTables() {
         DROP TABLE IF EXISTS noticias_diretores CASCADE;
         DROP TABLE IF EXISTS noticias_atores CASCADE;
         DROP TABLE IF EXISTS filmes_gen CASCADE;
-        DROP TABLE IF EXISTS filmes_str CASCADE;
+        DROP TABLE IF EXISTS filmes_streaming CASCADE;
         DROP TABLE IF EXISTS noticias_filmes CASCADE;
         DROP TABLE IF EXISTS filmes_atores CASCADE;
         DROP TABLE IF EXISTS users_listas CASCADE;
