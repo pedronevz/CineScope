@@ -23,6 +23,21 @@ export const criarReview = async (req, res) => {
             'INSERT INTO reviews (nota, texto, idfilme, idusuario) VALUES ($1, $2, $3, $4) RETURNING *',
             [nota, texto , idfilme, idusuario]
         );
+
+        // Calcula a nova média das notas
+        const mediaResult = await pool.query(
+            'SELECT ROUND(AVG(nota)::numeric, 3) as nova_media FROM reviews WHERE idfilme = $1',
+            [idfilme]
+        );
+
+        const novaMedia = mediaResult.rows[0].nova_media;
+
+        // Atualiza a nota_media na tabela filmes
+        await pool.query(
+            'UPDATE filmes SET nota_media = $1 WHERE id = $2',
+            [novaMedia, idfilme]
+        );
+
         res.json(novaReview.rows[0]);
     } catch (err) {
         console.error(err.message);
@@ -121,6 +136,21 @@ export const atualizarReview = async (req, res) => {
         `;
 
         const reviewAtualizada = await pool.query(query, valores);
+
+        // Recalcula a média das notas
+        const mediaResult = await pool.query(
+            'SELECT ROUND(AVG(nota)::numeric, 3) as nova_media FROM reviews WHERE idfilme = $1',
+            [reviewAtualizada.rows[0].idfilme]
+        );
+
+        const novaMedia = mediaResult.rows[0].nova_media;
+
+        // Atualiza a nota_media na tabela filmes
+        await pool.query(
+            'UPDATE filmes SET nota_media = $1 WHERE id = $2',
+            [novaMedia, reviewAtualizada.rows[0].idfilme]
+        );
+
         res.json(reviewAtualizada.rows[0]);
     } catch (err) {
         console.error(err.message);
@@ -140,6 +170,21 @@ export const deletarReview = async (req, res) => {
         }
 
         await pool.query('DELETE FROM reviews WHERE id = $1', [id]);
+
+        // Recalcula a média das notas
+        const mediaResult = await pool.query(
+            'SELECT ROUND(AVG(nota)::numeric, 3) as nova_media FROM reviews WHERE idfilme = $1',
+            [idFilme]
+        );
+
+        const novaMedia = mediaResult.rows[0].nova_media;
+
+        // Atualiza a nota_media na tabela filmes
+        await pool.query(
+            'UPDATE filmes SET nota_media = $1 WHERE id = $2',
+            [novaMedia, idFilme]
+        );
+
         res.json('Review deletada com sucesso!');
 
     } catch (err) {
