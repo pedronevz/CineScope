@@ -248,7 +248,16 @@ async function createTables() {
             ON CONFLICT (idfilme, idusuario) DO NOTHING;                
         `);
 
-        
+        await client.query(`
+            INSERT INTO atores (id, nome, data_nasc)
+            VALUES
+                (1, 'Nicholas Hoult', '1989-12-07'),
+                (2, 'Alfred Hitchcock', '1899-08-13'),  
+                (3, 'Clint Eastwood', '1930-05-31'),
+                (4, 'Ryan Gosling', '1980-11-12'),
+                (5, 'Toni Collette', '1972-11-01')             
+            ON CONFLICT (nome) DO NOTHING;
+        `);
 
         await client.query('COMMIT');
         console.log('Tabelas criadas e dados iniciais inseridos com sucesso!');
