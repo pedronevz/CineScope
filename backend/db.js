@@ -6,7 +6,6 @@ const pool = new Pool({
     host: 'localhost',
     database: 'cinescope',
     password: '12345678', 
-    password: '0260902003',
     port: 5432,
 });
 
@@ -88,8 +87,7 @@ async function createTables() {
         await client.query(`
             CREATE TABLE IF NOT EXISTS listas (
                 id SERIAL PRIMARY KEY,
-                nome VARCHAR(100) NOT NULL, 
-                descricao VARCHAR(100),
+                nome VARCHAR(100) NOT NULL,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             );
         `);
@@ -116,8 +114,7 @@ async function createTables() {
         await client.query(`
             CREATE TABLE IF NOT EXISTS servicos_streaming (
                 id SERIAL PRIMARY KEY,
-                nome VARCHAR(100) UNIQUE NOT NULL, 
-                url VARCHAR(100) NOT NULL, 
+                nome VARCHAR(100) UNIQUE NOT NULL,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             );
         `);
@@ -216,6 +213,19 @@ async function createTables() {
                 (5, 'Damien Chazelle', '1985-01-19')             
             ON CONFLICT (nome) DO NOTHING;
         `);
+        
+        await client.query(`
+            INSERT INTO servicos_streaming (id, nome)
+            VALUES
+                (1, 'Max'),
+                (2, 'Amazon Prime'),
+                (3, 'Disney+'),
+                (4, 'Netflix'),
+                (5, 'Apple TV'),
+                (6, 'Globoplay'),
+                (7, 'Paramount+')
+            ON CONFLICT (nome) DO NOTHING;
+        `);
 
         await client.query(`
             INSERT INTO filmes (id, titulo, ano, sinopse, duracao, genero, diretor)
@@ -249,7 +259,46 @@ async function createTables() {
             ON CONFLICT (idfilme, idusuario) DO NOTHING;                
         `);
 
-        
+        await client.query(`
+            INSERT INTO atores (id, nome, data_nasc)
+            VALUES
+                (1, 'Nicholas Hoult', '1989-12-07'),
+                (2, 'Emma Stone', '1988-11-06'),  
+                (3, 'Tom Hanks', '1956-07-09'),
+                (4, 'Ryan Gosling', '1980-11-12'),
+                (5, 'Toni Collette', '1972-11-01'),                
+                (6, 'James Stewart', '1908-05-20'),
+                (7, 'Mark Hamill', '1951-09-25'),
+                (8, 'Carrie Fisher', '1956-10-21')             
+            ON CONFLICT (nome) DO NOTHING;
+        `);
+       
+        await client.query(`
+            INSERT INTO filmes_atores (idfilme, idator)
+            VALUES
+                (1, 1),
+                (2, 2),
+                (3, 3),
+                (2, 4),
+                (1, 5),
+                (5, 6),
+                (4, 7),
+                (4, 8)
+            ON CONFLICT (idfilme, idator) DO NOTHING;
+        `);
+
+        await client.query(`
+            INSERT INTO filmes_streaming (idfilme, idstreaming)
+            VALUES
+                (1, 1),
+                (2, 2),
+                (2, 5),
+                (3, 3),
+                (4, 3),
+                (5, 2),
+                (5, 5)
+            ON CONFLICT (idfilme, idstreaming) DO NOTHING;
+        `);
 
         await client.query('COMMIT');
         console.log('Tabelas criadas e dados iniciais inseridos com sucesso!');
