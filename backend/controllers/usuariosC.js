@@ -92,7 +92,7 @@ export const login = async (req, res) => {
 export const atualizarUsuario = async (req, res) => {
     try {
         const { id } = req.params;
-        const { nome, email, senha, data, bio } = req.body;
+        const { nome, email, senha, bio } = req.body;
 
         const camposParaAtualizar = [];
         const valores = [];
@@ -114,10 +114,6 @@ export const atualizarUsuario = async (req, res) => {
         if (senha !== undefined) {
             camposParaAtualizar.push('senha = $' + (valores.length + 1));
             valores.push(senha);
-        }
-        if (data !== undefined) {
-            camposParaAtualizar.push('data_nasc = $' + (valores.length + 1));
-            valores.push(data);
         }
         if (bio !== undefined) {
             camposParaAtualizar.push('bio = $' + (valores.length + 1));
