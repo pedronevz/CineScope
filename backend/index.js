@@ -2,9 +2,9 @@ import express from 'express';
 import usuariosRouter from './routes/usuariosR.js';
 import reviewsRouter from './routes/reviewsR.js';
 import filmesRouter from './routes/filmesR.js';
+import listasRouter from './routes/listasR.js';
 
 import cors from 'cors';
-
 
 const app = express();
 const port = 3000;
@@ -20,6 +20,7 @@ app.use(cors({
 app.use('/usuarios', usuariosRouter);
 app.use('/reviews', reviewsRouter);
 app.use('/filmes', filmesRouter);
+app.use('/listas', listasRouter);
 
 app.listen(port, () => {
     console.log(`Servidor rodando na porta ${port}`);

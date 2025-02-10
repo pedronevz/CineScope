@@ -87,8 +87,7 @@ async function createTables() {
         await client.query(`
             CREATE TABLE IF NOT EXISTS listas (
                 id SERIAL PRIMARY KEY,
-                nome VARCHAR(100) NOT NULL, 
-                descricao VARCHAR(100),
+                nome VARCHAR(100) NOT NULL,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             );
         `);
