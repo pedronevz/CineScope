@@ -115,8 +115,7 @@ async function createTables() {
         await client.query(`
             CREATE TABLE IF NOT EXISTS servicos_streaming (
                 id SERIAL PRIMARY KEY,
-                nome VARCHAR(100) UNIQUE NOT NULL, 
-                url VARCHAR(100) NOT NULL, 
+                nome VARCHAR(100) UNIQUE NOT NULL,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             );
         `);
@@ -215,6 +214,19 @@ async function createTables() {
                 (5, 'Damien Chazelle', '1985-01-19')             
             ON CONFLICT (nome) DO NOTHING;
         `);
+        
+        await client.query(`
+            INSERT INTO servicos_streaming (id, nome)
+            VALUES
+                (1, 'Max'),
+                (2, 'Amazon Prime'),
+                (3, 'Disney+'),
+                (4, 'Netflix'),
+                (5, 'Apple TV'),
+                (6, 'Globoplay'),
+                (7, 'Paramount+')
+            ON CONFLICT (nome) DO NOTHING;
+        `);
 
         await client.query(`
             INSERT INTO filmes (id, titulo, ano, sinopse, duracao, genero, diretor)
@@ -274,6 +286,19 @@ async function createTables() {
                 (4, 7),
                 (4, 8)
             ON CONFLICT (idfilme, idator) DO NOTHING;
+        `);
+
+        await client.query(`
+            INSERT INTO filmes_streaming (idfilme, idstreaming)
+            VALUES
+                (1, 1),
+                (2, 2),
+                (2, 5),
+                (3, 3),
+                (4, 3),
+                (5, 2),
+                (5, 5)
+            ON CONFLICT (idfilme, idstreaming) DO NOTHING;
         `);
 
         await client.query('COMMIT');
