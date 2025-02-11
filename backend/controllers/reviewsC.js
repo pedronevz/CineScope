@@ -112,7 +112,8 @@ export const atualizarReview = async (req, res) => {
             return res.status(404).json({ erro: 'Review não encontrada' });
         }
 
-         if (nota !== undefined) {
+        
+        if (nota !== undefined) {
             camposParaAtualizar.push('nota = $' + (valores.length + 1));
             valores.push(nota);
         }
@@ -121,7 +122,6 @@ export const atualizarReview = async (req, res) => {
             valores.push(texto);
         }
         
-        // Se nenhum campo for fornecido, retorna um erro
         if (camposParaAtualizar.length === 0) {
             return res.status(400).json({ erro: 'Nenhum campo fornecido para atualização' });
         }
@@ -135,12 +135,16 @@ export const atualizarReview = async (req, res) => {
             RETURNING *;
         `;
 
+        
         const reviewAtualizada = await pool.query(query, valores);
+
+        
+        const idFilme = reviewAtualizada.rows[0].idfilme; // Obtém o idFilme da review
 
         // Recalcula a média das notas
         const mediaResult = await pool.query(
             'SELECT ROUND(AVG(nota)::numeric, 3) as nova_media FROM reviews WHERE idfilme = $1',
-            [reviewAtualizada.rows[0].idfilme]
+            [idFilme]
         );
 
         const novaMedia = mediaResult.rows[0].nova_media;
@@ -148,10 +152,9 @@ export const atualizarReview = async (req, res) => {
         // Atualiza a nota_media na tabela filmes
         await pool.query(
             'UPDATE filmes SET nota_media = $1 WHERE id = $2',
-            [novaMedia, reviewAtualizada.rows[0].idfilme]
+            [novaMedia, idFilme]
         );
 
-        res.json(reviewAtualizada.rows[0]);
     } catch (err) {
         console.error(err.message);
         res.status(500).send('Erro no servidor');
@@ -163,15 +166,15 @@ export const deletarReview = async (req, res) => {
     try {
         const { id } = req.params;
 
-        // Verifica se a review existe
         const review = await pool.query('SELECT * FROM reviews WHERE id = $1', [id]);
         if (review.rows.length === 0) {
             return res.status(404).json({ erro: 'Review não encontrada' });
         }
 
+        const idFilme = review.rows[0].idfilme; // Obtém o idFilme da review
+
         await pool.query('DELETE FROM reviews WHERE id = $1', [id]);
 
-        // Recalcula a média das notas
         const mediaResult = await pool.query(
             'SELECT ROUND(AVG(nota)::numeric, 3) as nova_media FROM reviews WHERE idfilme = $1',
             [idFilme]
