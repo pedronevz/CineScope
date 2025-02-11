@@ -139,15 +139,6 @@ async function createTables() {
             );
         `);
 
-       /*  await client.query(`
-            CREATE TABLE IF NOT EXISTS users_listas (
-                idLista INT REFERENCES listas(id) ON DELETE CASCADE,
-                idUser INT REFERENCES usuarios(id) ON DELETE CASCADE,
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                PRIMARY KEY (idLista, idUser)
-            );
-        `); */
-
         await client.query(`
             CREATE TABLE IF NOT EXISTS filmes_atores (
                 idFilme INT REFERENCES filmes(id) ON DELETE CASCADE, 
