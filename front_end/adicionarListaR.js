@@ -62,7 +62,6 @@ document.addEventListener("DOMContentLoaded", async function () {
     addListForm.addEventListener("submit", async function (event) {
         event.preventDefault();
         const listName = document.getElementById("listName").value;
-        const listDescription = document.getElementById("listDescription").value;
 
         try {
             const response = await fetch("http://localhost:3000/listas", {
@@ -70,7 +69,7 @@ document.addEventListener("DOMContentLoaded", async function () {
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({ nome: listName, descricao: listDescription, usuarioId: userId })
+                body: JSON.stringify({ nome: listName, usuarioId: userId })
             });
 
             if (!response.ok) {
