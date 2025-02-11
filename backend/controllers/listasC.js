@@ -3,19 +3,51 @@ import pool from '../db.js';
 
 // CREATE
 export const criarLista = async (req, res) => {
-    const { nome, idUsuario } = req.body;
+    const { nome, iduser } = req.body; // Adiciona idUsuario ao corpo da requisição
 
-    try {
-        const client = await pool.connect();
-        const query = 'INSERT INTO listas (nome) VALUES ($1) RETURNING *;';
-        const resultado = await client.query(query, [nome]);
-        res.status(201).json(resultado.rows[0]);
-    } catch (err) {
-        console.error(err.message);
-        res.status(500).send('Erro ao criar lista');
+    if (!nome || !iduser) {
+        return res.status(400).json({ erro: 'Nome da lista e ID do usuário são obrigatórios' });
     }
 
+    const client = await pool.connect();
 
+    try {
+        // Inicia uma transação
+        await client.query('BEGIN');
+
+        const queryInserirLista = 'INSERT INTO listas (nome) VALUES ($1) RETURNING *;';
+        const resultadoLista = await client.query(queryInserirLista, [nome]);
+
+        if (resultadoLista.rows.length === 0) {
+            throw new Error('Erro ao criar lista');
+        }
+
+        const listaCriada = resultadoLista.rows[0];
+        const idLista = listaCriada.id;
+
+        const queryInserirAssociacao = 'INSERT INTO users_listas (iduser, idlista) VALUES ($1, $2) RETURNING *;';
+        const resultadoAssociacao = await client.query(queryInserirAssociacao, [iduser, idLista]);
+
+        if (resultadoAssociacao.rows.length === 0) {
+            throw new Error('Erro ao associar lista ao usuário');
+        }
+
+
+        await client.query('COMMIT');
+
+        // Retorna a lista criada e a associação
+        res.status(201).json({
+            lista: listaCriada,
+            associacao: resultadoAssociacao.rows[0],
+        });
+    } catch (err) {
+        await client.query('ROLLBACK');
+        console.error(err.message);
+        res.status(500).send('Erro ao criar lista ou associar ao usuário');
+    } finally {
+
+        client.release();
+    }
 };
 
 export const adicionarFilmeALista = async (req, res) => {
