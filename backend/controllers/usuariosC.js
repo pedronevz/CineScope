@@ -89,9 +89,7 @@ export const login = async (req, res) => {
             return res.status(400).json({ erro: 'Preencha a senha!' })
         }
 
-        //const usuario = await pool.query('SELECT * FROM login_usuario($1, $2)', [nome, senha]);
-        const usuario = await pool.query('SELECT * FROM usuarios WHERE nome = $1 AND senha = $2', [nome, senha]);
-
+        const usuario = await pool.query('SELECT * FROM login_usuario($1, $2)', [nome, senha]);
 
         if(usuario.rows.length === 0){
             return res.status(404).json({ erro: 'Nome ou senha incorretos!' });
