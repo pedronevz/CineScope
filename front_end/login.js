@@ -22,8 +22,11 @@ document.getElementById('login-form').addEventListener('submit', async function 
             throw new Error(data.erro || 'Erro ao fazer login');
         }
 
-        // Armazena os dados do usuário logado (pode incluir token futuramente)
+        // Armazena os dados do usuário logado (incluindo ID da sessão, se fornecido)
         localStorage.setItem('usuarioLogado', JSON.stringify(data));
+        if (data.id) {
+            localStorage.setItem('sessaoId', data.id);
+        }
 
         alert(`Bem-vindo, ${data.nome}!`);
         window.location.href = 'usuario.html'; // Redireciona para a página inicial

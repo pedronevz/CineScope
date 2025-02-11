@@ -15,7 +15,7 @@ document.getElementById('cadastroForm').addEventListener('submit', async functio
         senha: senha,
         data: data,
         bio: bio
-    };//
+    };
 
     console.log('Dados enviados:', userData); // Log dos dados enviados
 
@@ -38,6 +38,15 @@ document.getElementById('cadastroForm').addEventListener('submit', async functio
         const data = await response.json();
         alert('Usuário cadastrado com sucesso!');
         console.log('Usuário cadastrado:', data);
+
+        // Armazenar dados do usuário no localStorage
+        localStorage.setItem('usuarioLogado', JSON.stringify({
+            id: data.id, // Supondo que o servidor retorne o ID do usuário
+            nome: data.nome, // Supondo que o servidor retorne o nome do usuário
+            email: data.email // Supondo que o servidor retorne o email do usuário
+        }));
+
+        console.log('Dados do usuário armazenados:', localStorage.getItem('usuarioLogado'));
 
         // Redirecionar para a página de login ou outra página
         window.location.href = 'login.html';

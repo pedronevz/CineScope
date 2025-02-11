@@ -1,77 +1,49 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado'));
+document.getElementById('review-form').addEventListener('submit', async function(event) {
+    event.preventDefault(); // Impede o recarregamento da página
 
-    if (!usuarioLogado) {
-        // Se não houver usuário logado, redireciona para a tela de login
-        window.location.href = 'login.html';
-        return;
+    // Recupera as IDs do filme e do usuário
+    const idfilme = localStorage.getItem("filmeSelecionado");
+    const idusuario = localStorage.getItem('sessaoId');
+
+    // Coleta os dados do formulário
+    const rating = document.getElementById('nota').value;
+    const reviewText = document.getElementById('review').value;
+
+    // Monta o objeto com os dados da review
+    const reviewData = {
+        nota: rating,
+        texto: reviewText
+    };
+
+    try {
+        // Envia a review para o servidor
+        const response = await fetch(`http://localhost:3000/reviews/filme/${idfilme}/usuario/${idusuario}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(reviewData)
+        });
+
+        // Verifica se a requisição foi bem-sucedida
+        if (!response.ok) {
+            const errorResponse = await response.json();
+            console.error('Resposta de erro:', errorResponse);
+            throw new Error('Erro ao enviar review');
+        }
+
+        // Exibe mensagem de sucesso
+        const result = await response.json();
+        localStorage.setItem('reviewId', result.id); // Guarda o ID da review
+        alert('Review enviada com sucesso!');
+        
+        // Limpa o formulário
+        document.getElementById('review-form').reset();
+
+        // Redireciona para outra página (opcional)
+        window.location.href = 'filme.html?id=' + idfilme; // Volta para a página do filme
+    } catch (error) {
+        console.error('Erro:', error);
+        alert('Erro ao enviar review. Tente novamente.');
     }
-
-    // Manipulador de envio do formulário de pesquisa
-    document.getElementById('search-form').addEventListener('submit', async function(event) {
-        event.preventDefault();
-
-        const searchQuery = document.getElementById('search').value;
-
-        try {
-            const response = await fetch(`http://localhost:3000/filmes?nome=${encodeURIComponent(searchQuery)}`);
-
-            if (!response.ok) {
-                const erro = await response.json();
-                throw new Error(`Erro ao buscar filmes: ${erro.erro}`);
-            }
-
-            const filmes = await response.json();
-            const filmeSelect = document.getElementById('filme');
-
-            // Limpa as opções anteriores
-            filmeSelect.innerHTML = '';
-
-            filmes.forEach(filme => {
-                const option = document.createElement('option');
-                option.value = filme.id;
-                option.textContent = filme.nome;
-                filmeSelect.appendChild(option);
-            });
-
-            document.getElementById('review-form').style.display = 'block';
-        } catch (error) {
-            console.error("Erro:", error);
-            alert("Erro ao buscar filmes. Tente novamente.");
-        }
-    });
-
-    document.getElementById("review-form").addEventListener("submit", async function(event) {
-        event.preventDefault();
-
-        const idfilme = document.getElementById("filme").value;
-        const rating = document.getElementById("rating").value;
-        const reviewText = document.getElementById("review-text").value;
-
-        if (rating === "" || reviewText.trim() === "") {
-            alert("Por favor, preencha todos os campos.");
-            return;
-        }
-
-        try {
-            const response = await fetch(`http://localhost:3000/filme/${idfilme}/usuario/${usuarioLogado.id}`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ nota: rating, texto: reviewText })
-            });
-
-            if (!response.ok) {
-                const erro = await response.json();
-                throw new Error(`Erro ao enviar review: ${erro.erro}`);
-            }
-
-            alert("Review submetida com sucesso!");
-            window.location.href = `movie_details.html?id=${idfilme}`;
-        } catch (error) {
-            console.error("Erro:", error);
-            alert("Erro ao submeter review. Tente novamente.");
-        }
-    });
 });

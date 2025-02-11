@@ -18,14 +18,25 @@ document.addEventListener("DOMContentLoaded", async function () {
             const card = document.createElement("div");
             card.classList.add("card");
 
+            // Criação do HTML do card do filme
             card.innerHTML = `
                 <h3>${filme.titulo}</h3>
                 <p>Ano: ${filme.ano}</p>
-                <a href="filme.html?id=${filme.id}" class="button">Ver Mais</a>
+                <button class="button ver-mais" data-id="${filme.id}">Ver Mais</button>
             `;
 
             grid.appendChild(card);
         });
+
+        // Adiciona evento de clique para os botões "Ver Mais"
+        document.querySelectorAll(".ver-mais").forEach(button => {
+            button.addEventListener("click", function () {
+                const filmeId = this.getAttribute("data-id");
+                localStorage.setItem("filmeSelecionado", filmeId);
+                window.location.href = `filme.html?id=${filmeId}`;
+            });
+        });
+
     } catch (error) {
         console.error("Erro ao buscar filmes:", error);
         grid.innerHTML = `<p style="color: red;">Erro ao carregar os filmes.</p>`;

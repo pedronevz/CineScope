@@ -61,17 +61,15 @@
     <div class="container">
         <h1>Adicionar Review</h1>
         <form id="review-form">
-            <label for="filme">Filme:</label>
-            <input type="text" id="filme" name="filme" required>
             <label for="rating">Nota (0 a 10):</label>
-            <input type="number" id="rating" name="rating" min="0" max="10" required>
-            <label for="review-text">Review:</label>
-            <textarea id="review-text" name="review-text" rows="5" required></textarea>
+            <input type="number" id="nota" name="rating" min="0" max="10" required>
+            <label for="review">Review:</label>
+            <textarea id="review" name="review-text" rows="5" required></textarea>
 
             <button type="submit">Submeter Review</button>
         </form>
     </div>
 
-    <script src="scripts.js"></script>
+    <script src="adicionarReview.js"></script>
 </body>
 </html>

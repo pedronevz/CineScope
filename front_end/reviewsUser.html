@@ -141,6 +141,72 @@
             justify-content: flex-end;
             margin-bottom: 2rem;
         }
+
+        /* Estilos do Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            border-radius: 10px;
+            width: 50%;
+            max-width: 600px;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: #000;
+        }
+
+        .modal-form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-form label {
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        .modal-form input,
+        .modal-form textarea {
+            margin-bottom: 1rem;
+            padding: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .modal-form button {
+            padding: 0.5rem 1rem;
+            background-color: #fbbf24;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .modal-form button:hover {
+            background-color: #f59e0b;
+        }
     </style>
 </head>
 <body>
@@ -150,36 +216,51 @@
     <nav>
         <a href="home.html">Home/Filmes</a>
         <a href="usuario.html">Usuários</a>
-        <a href="listasG.html">Listas</a>
-        <a href="reviewsG.html">Reviews</a>
         <a href="#">Notícias</a>
     </nav>
-    
     <div class="container">
         <h2 class="section-title">Minhas Reviews</h2>
         <div class="add-review-container">
-            <a href="adicionarReview.html">
-                <button class="btn btn-add">Adicionar Review</button>
-            </a>
+            <!-- Formulário para adicionar review (se necessário) -->
         </div>
-        <div class="list-item">
-            <h3>Interstellar (2014)</h3>
-            <p>"Uma obra-prima da ficção científica! Nota 9.5/10"</p>
-            <button class="btn btn-edit">Editar</button>
-            <button class="btn btn-delete">Excluir</button>
-        </div>
-        <div class="list-item">
-            <h3>Parasita (2019)</h3>
-            <p>"Incrível do começo ao fim! Nota 10/10"</p>
-            <button class="btn btn-edit">Editar</button>
-            <button class="btn btn-delete">Excluir</button>
-        </div>
-        <div class="list-item">
-            <h3>O Poderoso Chefão (1972)</h3>
-            <p>"Um clássico absoluto! Nota 10/10"</p>
-            <button class="btn btn-edit">Editar</button>
-            <button class="btn btn-delete">Excluir</button>
+        <div id="reviews-list">
+            <!-- As reviews serão inseridas aqui dinamicamente -->
         </div>
     </div>
+    <!-- Modal -->
+        <div id="editModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>Editar Review</h2>
+            <form id="editReviewForm" class="modal-form">
+                <label for="reviewText">Review:</label>
+                <textarea id="reviewText" name="reviewText" rows="4"></textarea>
+                <label for="reviewNota">Nota:</label>
+                <input type="number" id="reviewNota" name="reviewNota" min="0" max="10" step="0.1" />
+                <button type="submit">Salvar Alterações</button>
+            </form>
+        </div>
+    </div>
+    <script>
+        // Função para abrir o modal
+        function openModal() {
+            document.getElementById('editModal').style.display = 'block';
+        }
+
+        // Função para fechar o modal
+        function closeModal() {
+            document.getElementById('editModal').style.display = 'none';
+        }
+
+        // Fechar o modal se o usuário clicar fora dele
+        window.onclick = function(event) {
+            const modal = document.getElementById('editModal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        };
+    </script>
+    <script src="atualizarReview.js"></script>
+    <script src="obterReviewsU.js"></script>
 </body>
 </html>
