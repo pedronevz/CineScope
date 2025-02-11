@@ -192,6 +192,33 @@ async function createTables() {
             );
         `);
 
+        await client.query(`
+            CREATE VIEW usuario_seguro_view AS 
+                SELECT id, nome, foto_perfil, bio, created_at
+                FROM usuarios;
+        `);
+
+        await client.query(`
+            CREATE FUNCTION login_usuario(p_nome VARCHAR(30), p_senha VARCHAR(30))
+            RETURNS SETOF usuarios AS
+            $func$
+            DECLARE
+                usuarios_tmp usuarios;
+            BEGIN
+                SELECT u.*
+                FROM usuarios u
+                WHERE u.nome = p_nome
+                INTO usuarios_tmp;
+                
+                IF usuarios_tmp.senha = p_senha THEN
+                    RETURN NEXT usuarios_tmp;
+                    RETURN;
+                END IF;
+            END;
+            $func$
+            LANGUAGE plpgsql;
+        `);
+
         await client.query('COMMIT');
         console.log('Tabelas criadas com sucesso!');
     } catch (err) {
