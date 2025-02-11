@@ -192,6 +192,13 @@ async function createTables() {
             );
         `);
 
+        await client.query(`
+            CREATE VIEW usuario_seguro AS 
+                SELECT id, nome, foto_perfil, bio, created_at
+                FROM usuarios;
+            );
+        `);
+
         await client.query('COMMIT');
         console.log('Tabelas criadas com sucesso!');
     } catch (err) {
