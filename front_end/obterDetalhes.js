@@ -29,6 +29,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
 
+            console.log(filme)
             // Preenche os detalhes do filme na página
             preencherDetalhesFilme(filme);
         } catch (error) {
@@ -43,8 +44,9 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('duration').innerText = `Duração: ${filme.duracao}h`;
         document.getElementById('streaming').innerText = `Streamings: ${filme.streamings.join(', ')}`;
         document.getElementById('rating').innerText = `Nota: ${filme.nota_media}`;
-        document.getElementById('director').innerHTML = `Diretor: <a href="diretor1.html">${filme.diretor}</a>`;
-        document.getElementById('actors').innerHTML = `Atores: ${filme.atores.map((ator, index) => `<a href="ator${index + 1}.html">${ator}</a>`).join(', ')}`;
+        document.getElementById('director').innerHTML = `Diretor: <a href="diretor1.html?id=${filme.diretor.id}">${filme.diretor.nome}</a>`;
+        document.getElementById('actors').innerHTML = `Atores: ${filme.atores.map((ator) => 
+            `<a href="ator1.html?id=${ator.id}">${ator.nome}</a>`).join(', ')}`;        
         document.getElementById('synopsis').innerText = filme.sinopse;
 
         // Exibe a foto de capa (se existir)

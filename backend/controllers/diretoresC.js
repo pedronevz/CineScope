@@ -6,7 +6,7 @@ import pool from '../db.js';
 export const obterDiretorEFilmes = async (req, res) => {
     try {
         const { id } = req.params;
-        const result = await pool.query('SELECT nome, data_nasc FROM diretores WHERE id = $1', [id]);
+        const result = await pool.query('SELECT id, nome, data_nasc FROM diretores WHERE id = $1', [id]);
 
         if (result.rows.length === 0) {
             return res.status(404).json({ erro: 'Diretor não encontrado' });
@@ -26,3 +26,20 @@ export const obterDiretorEFilmes = async (req, res) => {
         res.status(500).send('Erro no servidor');
     }
 };
+
+// READ
+export const obterDiretorId = async (req, res) => {
+    try {
+        const { nome } = req.params;
+        const result = await pool.query('SELECT id FROM diretores WHERE nome = $1', [nome]);
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ erro: 'Diretor não encontrado' });
+        }
+
+        res.json(result);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Erro no servidor');
+    }
+}

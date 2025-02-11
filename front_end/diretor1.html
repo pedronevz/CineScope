@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detalhes do Diretor</title>
     <style>
+        /* Seu CSS permanece o mesmo */
         body {
             font-family: Arial, sans-serif;
             background-color: #f3f4f6;
@@ -142,34 +143,19 @@
     
     <div class="container">
         <div class="director-header">
-            <img src="caminho/para/foto_diretor.jpg" alt="Foto do Diretor">
             <div class="director-info">
-                <h1>Nome do Diretor</h1>
-                <p><strong>Data de Nascimento:</strong> 01 de Janeiro de 1970</p>
-                
+                <h1 id="director-name">Nome do Diretor</h1>
+                <p><strong>Data de Nascimento:</strong> <span id="data-nasc">01 de Janeiro de 1970</span></p>
             </div>
         </div>
 
         <div class="movies">
             <h2>Filmes Dirigidos</h2>
-            <ul class="movie-list">
-                <li>
-                    <h3>Filme 1 (2020)</h3>
-                    <p>Descrição breve do filme 1.</p>
-                    <a href="filme1.html">Ver Detalhes</a>
-                </li>
-                <li>
-                    <h3>Filme 2 (2018)</h3>
-                    <p>Descrição breve do filme 2.</p>
-                    <a href="filme2.html">Ver Detalhes</a>
-                </li>
-                <li>
-                    <h3>Filme 3 (2015)</h3>
-                    <p>Descrição breve do filme 3.</p>
-                    <a href="filme3.html">Ver Detalhes</a>
-                </li>
+            <ul class="movies-list" id="movies-list">
             </ul>
         </div>
     </div>
+
+    <script src="obterDiretor.js"></script>
 </body>
 </html>

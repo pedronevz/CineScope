@@ -25,7 +25,7 @@ export const obterFilmeDetalhado = async (req, res) => {
         const client = await pool.connect();
 
         const filmeQuery = `
-            SELECT f.*, g.nome AS genero, d.nome AS diretor
+            SELECT f.*, g.nome AS genero, d.nome AS diretor, d.id AS diretor_id
             FROM filmes f
             JOIN generos g ON f.genero = g.id
             JOIN diretores d ON f.diretor = d.id
@@ -41,14 +41,17 @@ export const obterFilmeDetalhado = async (req, res) => {
 
         // Busca atores
         const atoresQuery = `
-            SELECT a.nome
+            SELECT a.id, a.nome 
             FROM atores a
             JOIN filmes_atores fa ON a.id = fa.idAtor
             WHERE fa.idFilme = $1;
-        `;
+            `;
 
         const atoresResult = await client.query(atoresQuery, [id]);
-        const atores = atoresResult.rows.map(row => row.nome);
+        const atores = atoresResult.rows.map(row => ({
+            id: row.id,
+            nome: row.nome
+        }));
 
         // Busca streamings
         const streamingQuery = `
@@ -82,7 +85,10 @@ export const obterFilmeDetalhado = async (req, res) => {
             duracao: filme.duracao,
             nota_media: filme.nota_media,
             genero: filme.genero,
-            diretor: filme.diretor,
+            diretor: {
+                id: filme.diretor_id,
+                nome: filme.diretor,
+            },
             foto_capa: fotoCapaBase64,
             atores: atores,
             streamings: streamings,

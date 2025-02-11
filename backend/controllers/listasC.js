@@ -3,7 +3,7 @@ import pool from '../db.js';
 
 // CREATE
 export const criarLista = async (req, res) => {
-    const { nome } = req.body;
+    const { nome, idUsuario } = req.body;
 
     try {
         const client = await pool.connect();
@@ -14,6 +14,8 @@ export const criarLista = async (req, res) => {
         console.error(err.message);
         res.status(500).send('Erro ao criar lista');
     }
+
+
 };
 
 export const adicionarFilmeALista = async (req, res) => {
@@ -33,6 +35,43 @@ export const adicionarFilmeALista = async (req, res) => {
 // READ
 export const lerLista = async (req, res) => {
     const { id } = req.params;
+
+    try {
+        const client = await pool.connect();
+
+        const listaQuery = 'SELECT * FROM listas WHERE id = $1;';
+        const listaResult = await client.query(listaQuery, [id]);
+
+        if (listaResult.rows.length === 0) {
+            return res.status(404).json({ erro: 'Lista não encontrada' });
+        }
+
+        const lista = listaResult.rows[0];
+
+        // Busca os filmes da lista
+        const filmesQuery = `
+            SELECT f.*
+            FROM filmes f
+            JOIN filmes_listas fl ON f.id = fl.idFilme
+            WHERE fl.idLista = $1;
+        `;
+        const filmesResult = await client.query(filmesQuery, [id]);
+        const filmes = filmesResult.rows;
+
+        // Retorna a lista com os filmes
+        res.json({
+            ...lista,
+            filmes: filmes,
+        });
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Erro ao ler lista');
+    }
+};
+
+// READ
+export const lerListaPorId = async (req, res) => {
+    const { idUsuario } = req.params;
 
     try {
         const client = await pool.connect();
