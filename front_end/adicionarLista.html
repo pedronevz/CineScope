@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adicionar Lista - CineScope</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f3f4f6;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #1f2937;
+            color: #ffffff;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            background-color: #374151;
+            padding: 0.5rem;
+        }
+
+        nav a {
+            color: #ffffff;
+            text-decoration: none;
+            margin: 0 1rem;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        nav a:hover {
+            background-color: #4b5563;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 1rem;
+            color: #1f2937;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        input, textarea {
+            padding: 0.5rem;
+            margin-bottom: 1rem;
+            border: 1px solid #d1d5db;
+            border-radius: 5px;
+            font-size: 1rem;
+            width: 100%;
+        }
+
+        .btn-submit {
+            background-color: #255527;
+            color: white;
+            padding: 0.8rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+
+        .btn-submit:hover {
+            background-color: #45a049;
+        }
+
+        .search-results {
+            margin-top: 1rem;
+        }
+
+        .search-results div {
+            padding: 0.5rem;
+            border: 1px solid #d1d5db;
+            border-radius: 5px;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+        }
+
+        .search-results div:hover {
+            background-color: #f3f4f6;
+        }
+
+        .selected-movies {
+            margin-top: 1rem;
+        }
+
+        .selected-movies div {
+            padding: 0.5rem;
+            border: 1px solid #d1d5db;
+            border-radius: 5px;
+            margin-bottom: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .selected-movies div button {
+            background-color: #ff4d4d;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 0.3rem 0.5rem;
+            cursor: pointer;
+        }
+
+        .selected-movies div button:hover {
+            background-color: #ff1a1a;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>CineScope</h1>
+    </header>
+    <nav>
+        <a href="home.html">Home/Filmes</a>
+        <a href="usuario.html">Usuários</a>
+        <a href="#">Notícias</a>
+    </nav>
+    
+    <div class="container">
+        <h2 class="section-title">Adicionar Nova Lista</h2>
+        <form id="addListForm">
+            <label for="listName">Nome da Lista:</label>
+            <input type="text" id="listName" name="listName" required>
+            <label for="movieSelect">Escolha um Filme:</label>
+            <select id="movieSelect">
+                <option value="">Selecione um filme</option>
+            </select>
+            <button type="button" id="addMovieButton">Adicionar</button>
+            <div class="selected-movies" id="selectedMovies"></div>
+            
+            <button type="submit" class="btn-submit">Criar Lista</button>
+        </form>
+    </div>
+    <script>
+    </script>
+    <script src="adicionarFilmeL.js"></script>
+    <script src="adicionarListaR.js"></script>
+</body>
+</html>
