@@ -74,7 +74,6 @@ document.addEventListener("DOMContentLoaded", async function () {
         event.preventDefault();
 
         const nomeLista = document.getElementById("listName").value;
-        const descricao = document.getElementById("listDescription").value;
 
         if (!nomeLista.trim() || selectedMovies.length === 0) {
             alert("Preencha o nome da lista e selecione pelo menos um filme!");
