@@ -6,14 +6,15 @@ document.addEventListener("DOMContentLoaded", async function () {
     const userId = localStorage.getItem("sessaoId"); // Obtém o ID do usuário logado
     let selectedMovies = [];
 
+    // Carrega os filmes
     try {
         const response = await fetch("http://localhost:3000/filmes");
-        const filmes = await response.json();
         
         if (!response.ok) {
             throw new Error("Erro ao carregar filmes");
         }
 
+        const filmes = await response.json();
         filmes.forEach(filme => {
             const movieItem = document.createElement("div");
             movieItem.innerHTML = `
@@ -26,6 +27,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         console.error("Erro ao buscar filmes:", error);
     }
 
+    // Adiciona filmes à lista
     addMovieButton.addEventListener("click", function () {
         const checkboxes = document.querySelectorAll("#moviesContainer input[type='checkbox']:checked");
 
@@ -48,6 +50,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         });
     });
 
+    // Remove filmes da lista
     selectedMoviesDiv.addEventListener("click", function (event) {
         if (event.target.classList.contains("remove-movie")) {
             const movieId = event.target.getAttribute("data-id");
@@ -59,6 +62,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         }
     });
 
+    // Cria a lista e associa filmes
     addListForm.addEventListener("submit", async function (event) {
         event.preventDefault();
         const listName = document.getElementById("listName").value;
@@ -69,7 +73,7 @@ document.addEventListener("DOMContentLoaded", async function () {
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({ nome: listName, usuarioId: userId })
+                body: JSON.stringify({ nome: listName, iduser: userId })
             });
 
             if (!response.ok) {
@@ -77,8 +81,9 @@ document.addEventListener("DOMContentLoaded", async function () {
             }
 
             const lista = await response.json();
-            const listaId = lista.id;
+            const listaId = lista.lista.id;
 
+            // Adiciona os filmes à lista
             for (const movieId of selectedMovies) {
                 await fetch("http://localhost:3000/listas/adicionarFilme", {
                     method: "POST",

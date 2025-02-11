@@ -6,6 +6,7 @@ import {
     removerLista,
     editarLista,
     lerLista,
+    lerListaPorId
 } from '../controllers/listasC.js';
 
 const router = express.Router();
@@ -17,5 +18,6 @@ router.delete('/:id', removerLista);
 router.delete('/:idLista/filmes/:idFilme', removerFilmeDaLista); 
 router.put('/:id', editarLista); 
 router.get('/:id', lerLista); 
+router.get('/usuario/:idUsuario', lerListaPorId); // Adicionando a rota para ler listas por ID do usuário
 
 export default router;

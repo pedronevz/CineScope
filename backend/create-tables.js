@@ -89,6 +89,7 @@ async function createTables() {
             CREATE TABLE IF NOT EXISTS listas (
                 id SERIAL PRIMARY KEY,
                 nome VARCHAR(100) NOT NULL,
+                idUsuario INT REFERENCES usuarios(id) ON DELETE CASCADE,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             );
         `);
@@ -138,14 +139,14 @@ async function createTables() {
             );
         `);
 
-        await client.query(`
+       /*  await client.query(`
             CREATE TABLE IF NOT EXISTS users_listas (
                 idLista INT REFERENCES listas(id) ON DELETE CASCADE,
                 idUser INT REFERENCES usuarios(id) ON DELETE CASCADE,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 PRIMARY KEY (idLista, idUser)
             );
-        `);
+        `); */
 
         await client.query(`
             CREATE TABLE IF NOT EXISTS filmes_atores (

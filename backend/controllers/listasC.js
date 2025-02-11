@@ -3,50 +3,30 @@ import pool from '../db.js';
 
 // CREATE
 export const criarLista = async (req, res) => {
-    const { nome, iduser } = req.body; // Adiciona idUsuario ao corpo da requisição
+    const { nome, idusuario } = req.body;
 
-    if (!nome || !iduser) {
+    // Verifica se os campos obrigatórios foram fornecidos
+    if (!nome || !idusuario) {
         return res.status(400).json({ erro: 'Nome da lista e ID do usuário são obrigatórios' });
     }
 
-    const client = await pool.connect();
-
     try {
-        // Inicia uma transação
-        await client.query('BEGIN');
+        const query = `
+            INSERT INTO listas (nome, idusuario)
+            VALUES ($1, $2)
+            RETURNING *;
+        `;
+        const resultado = await pool.query(query, [nome, idusuario]);
 
-        const queryInserirLista = 'INSERT INTO listas (nome) VALUES ($1) RETURNING *;';
-        const resultadoLista = await client.query(queryInserirLista, [nome]);
-
-        if (resultadoLista.rows.length === 0) {
+        // Verifica se a lista foi criada com sucesso
+        if (resultado.rows.length === 0) {
             throw new Error('Erro ao criar lista');
         }
 
-        const listaCriada = resultadoLista.rows[0];
-        const idLista = listaCriada.id;
-
-        const queryInserirAssociacao = 'INSERT INTO users_listas (iduser, idlista) VALUES ($1, $2) RETURNING *;';
-        const resultadoAssociacao = await client.query(queryInserirAssociacao, [iduser, idLista]);
-
-        if (resultadoAssociacao.rows.length === 0) {
-            throw new Error('Erro ao associar lista ao usuário');
-        }
-
-
-        await client.query('COMMIT');
-
-        // Retorna a lista criada e a associação
-        res.status(201).json({
-            lista: listaCriada,
-            associacao: resultadoAssociacao.rows[0],
-        });
+        res.status(201).json(resultado.rows[0]);
     } catch (err) {
-        await client.query('ROLLBACK');
         console.error(err.message);
-        res.status(500).send('Erro ao criar lista ou associar ao usuário');
-    } finally {
-
-        client.release();
+        res.status(500).send('Erro ao criar lista');
     }
 };
 
@@ -82,7 +62,7 @@ export const lerLista = async (req, res) => {
 
         // Busca os filmes da lista
         const filmesQuery = `
-            SELECT f.*
+            SELECT f.id, f.titulo, f.ano
             FROM filmes f
             JOIN filmes_listas fl ON f.id = fl.idFilme
             WHERE fl.idLista = $1;
@@ -101,40 +81,44 @@ export const lerLista = async (req, res) => {
     }
 };
 
-// READ
 export const lerListaPorId = async (req, res) => {
     const { idUsuario } = req.params;
 
     try {
         const client = await pool.connect();
 
-        const listaQuery = 'SELECT * FROM listas WHERE id = $1;';
-        const listaResult = await client.query(listaQuery, [id]);
+        // Buscar as listas associadas ao usuário
+        const listaQuery = 'SELECT * FROM listas WHERE idusuario = $1;';
+        const listaResult = await client.query(listaQuery, [idUsuario]);
 
         if (listaResult.rows.length === 0) {
-            return res.status(404).json({ erro: 'Lista não encontrada' });
+            return res.status(404).json({ erro: 'Nenhuma lista encontrada para este usuário' });
         }
 
-        const lista = listaResult.rows[0];
+        // Para cada lista, buscar os filmes associados
+        const listasComFilmes = [];
 
-        // Busca os filmes da lista
-        const filmesQuery = `
-            SELECT f.*
-            FROM filmes f
-            JOIN filmes_listas fl ON f.id = fl.idFilme
-            WHERE fl.idLista = $1;
-        `;
-        const filmesResult = await client.query(filmesQuery, [id]);
-        const filmes = filmesResult.rows;
+        for (const lista of listaResult.rows) {
+            const filmesQuery = `
+                SELECT f.id, f.titulo, f.ano
+                FROM filmes f
+                JOIN filmes_listas fl ON f.id = fl.idFilme
+                WHERE fl.idLista = $1;
+            `;
+            const filmesResult = await client.query(filmesQuery, [lista.id]);
+            const filmes = filmesResult.rows;
 
-        // Retorna a lista com os filmes
-        res.json({
-            ...lista,
-            filmes: filmes,
-        });
+            listasComFilmes.push({
+                ...lista,
+                filmes: filmes,
+            });
+        }
+
+        // Retorna as listas e seus filmes
+        res.json(listasComFilmes);
     } catch (err) {
         console.error(err.message);
-        res.status(500).send('Erro ao ler lista');
+        res.status(500).send('Erro ao ler listas do usuário');
     }
 };
 

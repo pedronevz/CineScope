@@ -149,6 +149,28 @@ async function inserirDados() {
                 (97, 'Paramount+')
             ON CONFLICT (nome) DO NOTHING;
         `);
+        
+        await client.query(`
+            INSERT INTO noticias (id, titulo, conteudo)
+            VALUES
+                (101, 'Noticia1', 'Isso é uma notícia'),
+                (102, 'Indicados ao Oscar', 'Filmes foram indicados'),
+                (103, 'Filme sobre palíndromos', 'somordnílap erbos emliF'),
+                (104, 'Noticia2', 'Isso é uma notícia2'),
+                (105, 'Streamings ou cinema', 'A pergunta do século XXI: Serviços de streaming o sinema?')
+            ON CONFLICT (id) DO NOTHING;
+        `);
+        
+        await client.query(`
+            INSERT INTO noticias_diretores (idProd, idNoticia)
+            VALUES
+                (91, 101),
+                (92, 102),
+                (93, 103),
+                (94, 104),
+                (95, 105)
+            ON CONFLICT (idProd, idNoticia) DO NOTHING;
+        `);
 
         await client.query(`
             INSERT INTO usuarios (id, nome, email, senha, data_nasc, bio)
@@ -186,6 +208,17 @@ async function inserirDados() {
                 (98, 'Carrie Fisher', '1956-10-21')             
             ON CONFLICT (nome) DO NOTHING;
         `);
+        
+        await client.query(`
+            INSERT INTO noticias_atores (idAtor, idNoticia)
+            VALUES
+                (91, 101),
+                (92, 102),
+                (93, 103),
+                (94, 104),
+                (95, 105)
+            ON CONFLICT (idAtor, idNoticia) DO NOTHING;
+        `);
 
         await client.query(`
             INSERT INTO filmes_atores (idfilme, idator)
@@ -212,6 +245,61 @@ async function inserirDados() {
                 (95, 92),
                 (95, 95)
             ON CONFLICT (idfilme, idstreaming) DO NOTHING;
+        `);
+        
+        await client.query(`
+            INSERT INTO listas (id, nome, idusuario)
+            VALUES
+                (101, 'Filmes de Ficção Científica', '93'),
+                (102, 'Clássicos do Cinema', '92'),
+                (103, 'Filmes para Chorar', '94'),
+                (104, 'Filmes de Ação', '93'),
+                (105, 'Filmes de Comédia', '91')
+            ON CONFLICT (id) DO NOTHING;
+        `);
+
+        await client.query(`
+            INSERT INTO comentarios (id, texto, idUsuario, idReview)
+            VALUES
+                (101, 'Concordo plenamente com a review!', 91, 91),
+                (102, 'O final foi realmente surpreendente!', 92, 92),
+                (103, 'Adorei a análise sobre a fotografia.', 93, 93),
+                (104, 'O Luke é realmente um personagem incrível.', 94, 94),
+                (105, 'O cervo é o verdadeiro protagonista!', 91, 95)
+            ON CONFLICT (id) DO NOTHING;
+        `);
+        
+        await client.query(`
+            INSERT INTO seguidores_usuarios (idSeguidor, idSeguido)
+            VALUES
+                (91, 92),
+                (92, 93),
+                (93, 94),
+                (94, 91),
+                (92, 91)
+            ON CONFLICT (idSeguidor, idSeguido) DO NOTHING;
+        `);
+
+        await client.query(`
+            INSERT INTO filmes_listas (idLista, idFilme)
+            VALUES
+                (101, 91),
+                (101, 94),
+                (102, 95),
+                (103, 92),
+                (104, 93)
+            ON CONFLICT (idLista, idFilme) DO NOTHING;
+        `);
+
+        await client.query(`
+            INSERT INTO noticias_filmes (idFilme, idNoticia)
+            VALUES
+                (91, 101),
+                (92, 102),
+                (93, 103),
+                (94, 104),
+                (95, 105)
+            ON CONFLICT (idFilme, idNoticia) DO NOTHING;
         `);
 
         await client.query('COMMIT');
