@@ -9,7 +9,7 @@ const pool = new Pool({
     host: 'localhost',
     database: 'cinescope',
     password: '12345678',
-    password: '0260902003',
+//    password: '0260902003',
     port: 5432,
 });
 
