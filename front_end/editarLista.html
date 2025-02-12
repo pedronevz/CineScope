@@ -64,7 +64,7 @@
             margin-bottom: 0.5rem;
         }
 
-        input, textarea {
+        input, textarea, select {
             padding: 0.5rem;
             margin-bottom: 1rem;
             border: 1px solid #d1d5db;
@@ -73,7 +73,7 @@
             width: 100%;
         }
 
-        .btn-submit {
+        .btn-submit, #btnAdicionarFilme {
             background-color: #255527;
             color: white;
             padding: 0.8rem;
@@ -82,9 +82,10 @@
             cursor: pointer;
             font-size: 1rem;
             transition: background-color 0.3s;
+            margin-top: 0.5rem;
         }
 
-        .btn-submit:hover {
+        .btn-submit:hover, #btnAdicionarFilme:hover {
             background-color: #45a049;
         }
 
@@ -133,11 +134,11 @@
             <input type="text" id="listName" name="listName" required>
     
             <!-- Dropdown para selecionar filmes -->
-            <label for="filmesDropdown">Adicionar Filme:</label>
-            <select id="filmesDropdown">
+            <label for="movieSelect">Adicionar Filme:</label>
+            <select id="movieSelect">
                 <option value="">Selecione um filme</option>
             </select>
-            <button type="button" id="btnAdicionarFilme">Adicionar Filme</button>
+            <button type="button" id="addMovieButton">Adicionar Filme</button>
     
             <!-- Lista de filmes selecionados -->
             <div class="selected-movies" id="selectedMovies"></div>
@@ -146,4 +147,5 @@
         </form>
     </div>
     <script src="editarLista.js"></script>
+</body>
 </html>

@@ -1,10 +1,14 @@
 document.addEventListener("DOMContentLoaded", async function () {
+    console.log("DOM carregado, iniciando script...");
+
+
     const movieSelect = document.getElementById("movieSelect");
     const addMovieButton = document.getElementById("addMovieButton");
     const selectedMoviesDiv = document.getElementById("selectedMovies");
     const addListForm = document.getElementById("addListForm");
     const userId = localStorage.getItem("sessaoId"); // Obtém o ID do usuário logado
     let selectedMovies = [];
+    
 
     // Carrega os filmes
     try {
@@ -87,6 +91,7 @@ document.addEventListener("DOMContentLoaded", async function () {
             }
 
             alert("Lista criada com sucesso!");
+            localStorage.setItem("listaId", listaId);
             window.location.href = "listasUser.html";
         } catch (error) {
             console.error("Erro ao criar lista:", error);
