@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", async function () {
-    const moviesContainer = document.getElementById("moviesContainer");
+    const movieSelect = document.getElementById("movieSelect");
     const addMovieButton = document.getElementById("addMovieButton");
     const selectedMoviesDiv = document.getElementById("selectedMovies");
     const addListForm = document.getElementById("addListForm");
@@ -9,19 +9,15 @@ document.addEventListener("DOMContentLoaded", async function () {
     // Carrega os filmes
     try {
         const response = await fetch("http://localhost:3000/filmes");
-        
         if (!response.ok) {
             throw new Error("Erro ao carregar filmes");
         }
-
         const filmes = await response.json();
         filmes.forEach(filme => {
-            const movieItem = document.createElement("div");
-            movieItem.innerHTML = `
-                <input type="checkbox" id="filme-${filme.id}" value="${filme.id}">
-                <label for="filme-${filme.id}">${filme.titulo}</label>
-            `;
-            moviesContainer.appendChild(movieItem);
+            const option = document.createElement("option");
+            option.value = filme.id;
+            option.textContent = filme.titulo;
+            movieSelect.appendChild(option);
         });
     } catch (error) {
         console.error("Erro ao buscar filmes:", error);
@@ -29,25 +25,21 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     // Adiciona filmes à lista
     addMovieButton.addEventListener("click", function () {
-        const checkboxes = document.querySelectorAll("#moviesContainer input[type='checkbox']:checked");
+        const movieId = movieSelect.value;
+        const movieLabel = movieSelect.options[movieSelect.selectedIndex].textContent;
 
-        checkboxes.forEach(cb => {
-            const movieId = cb.value;
-            const movieLabel = document.querySelector(`label[for='filme-${movieId}']`).textContent;
+        // Evita duplicação
+        if (movieId && !selectedMovies.includes(movieId)) {
+            selectedMovies.push(movieId);
 
-            // Evita duplicação
-            if (!selectedMovies.includes(movieId)) {
-                selectedMovies.push(movieId);
-
-                const movieItem = document.createElement("div");
-                movieItem.id = `selected-${movieId}`;
-                movieItem.innerHTML = `
-                    ${movieLabel} 
-                    <button class="remove-movie" data-id="${movieId}">Remover</button>
-                `;
-                selectedMoviesDiv.appendChild(movieItem);
-            }
-        });
+            const movieItem = document.createElement("div");
+            movieItem.id = `selected-${movieId}`;
+            movieItem.innerHTML = `
+                ${movieLabel} 
+                <button class="remove-movie" data-id="${movieId}">Remover</button>
+            `;
+            selectedMoviesDiv.appendChild(movieItem);
+        }
     });
 
     // Remove filmes da lista
@@ -58,7 +50,6 @@ document.addEventListener("DOMContentLoaded", async function () {
 
             // Remove da interface
             document.getElementById(`selected-${movieId}`).remove();
-            document.getElementById(`filme-${movieId}`).checked = false; // Desmarca o checkbox
         }
     });
 
@@ -68,12 +59,13 @@ document.addEventListener("DOMContentLoaded", async function () {
         const listName = document.getElementById("listName").value;
 
         try {
+            // Cria a lista
             const response = await fetch("http://localhost:3000/listas", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({ nome: listName, iduser: userId })
+                body: JSON.stringify({ nome: listName, idusuario: userId })
             });
 
             if (!response.ok) {
@@ -81,7 +73,7 @@ document.addEventListener("DOMContentLoaded", async function () {
             }
 
             const lista = await response.json();
-            const listaId = lista.lista.id;
+            const listaId = lista.id;
 
             // Adiciona os filmes à lista
             for (const movieId of selectedMovies) {
@@ -95,7 +87,7 @@ document.addEventListener("DOMContentLoaded", async function () {
             }
 
             alert("Lista criada com sucesso!");
-            window.location.href = "home.html";
+            window.location.href = "listasUser.html";
         } catch (error) {
             console.error("Erro ao criar lista:", error);
             alert("Erro ao criar lista");

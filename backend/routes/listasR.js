@@ -5,8 +5,10 @@ import {
     removerFilmeDaLista,
     removerLista,
     editarLista,
+    editarFilmes,
     lerLista,
-    lerListaPorId
+    lerListaPorId,
+    obterFilmesDaLista
 } from '../controllers/listasC.js';
 
 const router = express.Router();
@@ -16,8 +18,10 @@ router.post('/', criarLista);
 router.post('/adicionarFilme', adicionarFilmeALista);
 router.delete('/:id', removerLista);  
 router.delete('/:idLista/filmes/:idFilme', removerFilmeDaLista); 
-router.put('/:id', editarLista); 
+router.put('/:id', editarLista);
+router.put('/:id/editarFilmes', editarFilmes); 
 router.get('/:id', lerLista); 
-router.get('/usuario/:idUsuario', lerListaPorId); // Adicionando a rota para ler listas por ID do usuário
+router.get('/usuario/:idUsuario', lerListaPorId);
+router.get('/:id/filmes', obterFilmesDaLista);
 
 export default router;

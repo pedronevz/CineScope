@@ -122,6 +122,24 @@ export const lerListaPorId = async (req, res) => {
     }
 };
 
+export const obterFilmesDaLista = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const query = `
+            SELECT f.*
+            FROM filmes f
+            JOIN filmes_listas fl ON f.id = fl.idFilme
+            WHERE fl.idLista = $1;
+        `;
+        const result = await pool.query(query, [id]);
+        res.json(result.rows);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Erro ao buscar filmes da lista');
+    }
+};
+
 // DELETE
 export const removerFilmeDaLista = async (req, res) => {
     const { idLista, idFilme } = req.params;
@@ -172,6 +190,46 @@ export const editarLista = async (req, res) => {
     } catch (err) {
         console.error(err.message);
         res.status(500).send('Erro ao editar lista');
+    }
+};
+
+export const editarFilmes = async (req, res) => {
+    const { id } = req.params; // ID da lista
+    const { filmesAdicionar, filmesRemover } = req.body; 
+
+    const client = await pool.connect();
+
+    try {
+        await client.query('BEGIN'); 
+
+        // Remove filmes da lista
+        if (filmesRemover && filmesRemover.length > 0) {
+            for (const filmeId of filmesRemover) {
+                await client.query(
+                    'DELETE FROM filmes_listas WHERE idLista = $1 AND idFilme = $2;',
+                    [id, filmeId]
+                );
+            }
+        }
+
+        // Adiciona filmes à lista
+        if (filmesAdicionar && filmesAdicionar.length > 0) {
+            for (const filmeId of filmesAdicionar) {
+                await client.query(
+                    'INSERT INTO filmes_listas (idLista, idFilme) VALUES ($1, $2) ON CONFLICT (idLista, idFilme) DO NOTHING;',
+                    [id, filmeId]
+                );
+            }
+        }
+
+        await client.query('COMMIT'); 
+        res.status(200).json({ mensagem: 'Filmes da lista atualizados com sucesso!' });
+    } catch (err) {
+        await client.query('ROLLBACK'); 
+        console.error(err.message);
+        res.status(500).send('Erro ao atualizar filmes da lista');
+    } finally {
+        client.release(); 
     }
 };
 
