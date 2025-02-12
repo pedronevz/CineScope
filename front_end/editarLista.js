@@ -1,166 +1,139 @@
-document.addEventListener("DOMContentLoaded", async function () {
-    const urlParams = new URLSearchParams(window.location.search);
-    const listaId = urlParams.get("id"); // Obtém o ID da lista da URL
-    const editListForm = document.getElementById("editListForm");
-    const listNameInput = document.getElementById("listName");
-    const selectedMoviesDiv = document.getElementById("selectedMovies");
-    let selectedMovies = [];
+document.addEventListener('DOMContentLoaded', function () {
+    const selectedMovies = document.getElementById('selectedMovies');
+    const editListForm = document.getElementById('editListForm');
+    const listNameInput = document.getElementById('listName');
+    const params = new URLSearchParams(window.location.search);
+    const listaId = params.get("id");
 
-    if (!listaId) {
-        alert("ID da lista não encontrado na URL.");
-        window.location.href = "listasUser.html";
-        return;
+    console.log('ID da lista:', listaId); // Verifique o ID da lista
+
+    // Função para carregar os detalhes da lista (nome da lista)
+    async function carregarDetalhesDaLista(idLista) {
+        try {
+            const response = await fetch(`http://localhost:3000/listas/${idLista}`);
+            console.log('Resposta da API (detalhes da lista):', response); // Verifique a resposta
+            if (!response.ok) {
+                throw new Error('Erro ao carregar detalhes da lista');
+            }
+            const lista = await response.json();
+            console.log('Detalhes da lista:', lista); // Verifique os detalhes da lista
+            preencherFormulario(lista);
+        } catch (error) {
+            console.error('Erro:', error);
+        }
     }
 
-    try {
-        // Carrega os dados da lista
-        const listaResponse = await fetch(`http://localhost:3000/listas/${listaId}`);
-        if (!listaResponse.ok) {
-            throw new Error("Erro ao carregar lista");
+    // Função para preencher o formulário com os dados da lista
+    function preencherFormulario(lista) {
+        listNameInput.value = lista.nome; // Preenche o campo do nome da lista
+    }
+
+    // Função para carregar os filmes da lista
+    async function carregarFilmesDaLista(idLista) {
+        try {
+            const response = await fetch(`http://localhost:3000/listas/${idLista}/filmes`);
+            console.log('Resposta da API (filmes da lista):', response); // Verifique a resposta
+            if (!response.ok) {
+                throw new Error('Erro ao carregar filmes da lista');
+            }
+            const filmes = await response.json();
+            console.log('Filmes retornados:', filmes); // Verifique os filmes
+            exibirFilmes(filmes);
+        } catch (error) {
+            console.error('Erro:', error);
         }
-        const lista = await listaResponse.json();
+    }
 
-        // Preenche o nome da lista
-        listNameInput.value = lista.nome;
-
-        // Carrega os filmes da lista
-        const filmesResponse = await fetch(`http://localhost:3000/listas/${listaId}/filmes`);
-        if (!filmesResponse.ok) {
-            throw new Error("Erro ao carregar filmes da lista");
-        }
-        const filmes = await filmesResponse.json();
-
-        // Exibe os filmes da lista
+    // Função para exibir os filmes na interface
+    function exibirFilmes(filmes) {
+        console.log('Exibindo filmes:', filmes); // Verifique os filmes recebidos
+        selectedMovies.innerHTML = ''; // Limpa a lista atual
         filmes.forEach(filme => {
-            selectedMovies.push(filme.id);
-            const movieItem = document.createElement("div");
-            movieItem.id = `selected-${filme.id}`;
-            movieItem.innerHTML = `
-                ${filme.titulo} 
-                <button class="remove-movie" id="remove_movie" data-id="${filme.id}">Remover</button>
+            const filmeDiv = document.createElement('div');
+            filmeDiv.innerHTML = `
+                <span>${filme.titulo} (${filme.ano})</span>
+                <button onclick="removerFilmeDaLista(${listaId}, ${filme.id})">Remover</button>
             `;
-            selectedMoviesDiv.appendChild(movieItem);
+            selectedMovies.appendChild(filmeDiv);
         });
+    }
 
-        // Carrega todos os filmes disponíveis para adicionar à lista
-        const todosFilmesResponse = await fetch("http://localhost:3000/filmes");
-        if (!todosFilmesResponse.ok) {
-            throw new Error("Erro ao carregar filmes");
+    // Função para carregar os filmes disponíveis no dropdown
+    async function carregarFilmesDisponiveis() {
+        try {
+            const response = await fetch('http://localhost:3000/filmes'); // Rota para buscar todos os filmes
+            if (!response.ok) {
+                throw new Error('Erro ao carregar filmes disponíveis');
+            }
+            const filmes = await response.json();
+            preencherDropdown(filmes);
+        } catch (error) {
+            console.error('Erro:', error);
         }
-        const todosFilmes = await todosFilmesResponse.json();
+    }
 
-        // Adiciona os filmes ao dropdown (se necessário)
-        const movieSelect = document.createElement("select");
-        movieSelect.id = "movieSelect";
-        movieSelect.innerHTML = `<option value="">Selecione um filme</option>`;
-        todosFilmes.forEach(filme => {
-            if (!selectedMovies.includes(filme.id)) {
-                const option = document.createElement("option");
-                option.value = filme.id;
-                option.textContent = filme.titulo;
-                movieSelect.appendChild(option);
-            }
+    // Função para preencher o dropdown com os filmes
+    function preencherDropdown(filmes) {
+        const dropdown = document.getElementById('filmesDropdown');
+        dropdown.innerHTML = '<option value="">Selecione um filme</option>'; // Limpa o dropdown
+
+        filmes.forEach(filme => {
+            const option = document.createElement('option');
+            option.value = filme.id; // Valor do option é o ID do filme
+            option.textContent = `${filme.titulo} (${filme.ano})`; // Texto exibido no dropdown
+            dropdown.appendChild(option);
         });
+    }
 
-        const addMovieButton = document.createElement("button");
-        addMovieButton.type = "button";
-        addMovieButton.textContent = "Adicionar Filme";
-        addMovieButton.addEventListener("click", function () {
-            const movieId = movieSelect.value;
-            const movieLabel = movieSelect.options[movieSelect.selectedIndex].textContent;
+    // Função para adicionar o filme selecionado à lista
+    document.getElementById('btnAdicionarFilme').addEventListener('click', async function () {
+        const dropdown = document.getElementById('filmesDropdown');
+        const filmeId = dropdown.value; // ID do filme selecionado
+       
+        if (!filmeId) {
+            alert('Selecione um filme para adicionar à lista.');
+            return;
+        }
 
-            if (movieId && !selectedMovies.includes(movieId)) {
-                selectedMovies.push(movieId);
+        if (!listaId) {
+            alert('ID da lista não encontrado.');
+            return;
+        }
 
-                const movieItem = document.createElement("div");
-                movieItem.id = `selected-${movieId}`;
-                movieItem.innerHTML = `
-                    ${movieLabel} 
-                    <button class="remove-movie" data-id="${movieId}">Remover</button>
-                `;
-                selectedMoviesDiv.appendChild(movieItem);
+        try {
+            await adicionarFilmeALista(listaId, filmeId); // Adiciona o filme à lista
+            carregarFilmesDaLista(listaId); // Recarrega os filmes da lista
+            dropdown.value = ''; // Reseta o dropdown
+        } catch (error) {
+            console.error('Erro ao adicionar filme:', error);
+        }
+    });
 
-                // Remove o filme do dropdown
-                movieSelect.remove(movieSelect.selectedIndex);
+    // Função para adicionar um filme à lista
+    async function adicionarFilmeALista(idLista, idFilme) {
+        try {
+            const response = await fetch('http://localhost:3000/listas/adicionarFilme', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ idLista, idFilme }),
+            });
+            if (!response.ok) {
+                throw new Error('Erro ao adicionar filme à lista');
             }
-        });
+            const resultado = await response.json();
+            console.log('Filme adicionado:', resultado);
+        } catch (error) {
+            console.error('Erro:', error);
+            throw error; // Propaga o erro para ser tratado no chamador
+        }
+    }
 
-        editListForm.insertBefore(movieSelect, selectedMoviesDiv);
-        editListForm.insertBefore(addMovieButton, selectedMoviesDiv);
-
-        // Remove filmes da lista
-        selectedMoviesDiv.addEventListener("click", function (event) {
-            if (event.target.classList.contains("remove-movie")) {
-                const movieId = event.target.getAttribute("data-id");
-                selectedMovies = selectedMovies.filter(id => id !== movieId);
-
-                // Remove da interface
-                document.getElementById(`selected-${movieId}`).remove();
-
-                // Adiciona o filme de volta ao dropdown
-                const filme = todosFilmes.find(f => f.id == movieId);
-                if (filme) {
-                    const option = document.createElement("option");
-                    option.value = filme.id;
-                    option.textContent = filme.titulo;
-                    movieSelect.appendChild(option);
-                }
-            }
-        });
-
-        editListForm.addEventListener("submit", async function (event) {
-            event.preventDefault();
-            const listName = listNameInput.value;
-
-            try {
-                // Atualiza o nome da lista
-                const updateResponse = await fetch(`http://localhost:3000/listas/${listaId}`, {
-                    method: "PUT",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({ nome: listName })
-                });
-
-                if (!updateResponse.ok) {
-                    throw new Error("Erro ao atualizar lista");
-                }
-
-                // Atualiza os filmes da lista
-                const filmesAtuaisResponse = await fetch(`http://localhost:3000/listas/${listaId}/filmes`);
-                if (!filmesAtuaisResponse.ok) {
-                    throw new Error("Erro ao carregar filmes da lista");
-                }
-                const filmesAtuais = await filmesAtuaisResponse.json();
-                const filmesAtuaisIds = filmesAtuais.map(f => f.id);
-
-                // Identifica filmes a serem adicionados e removidos
-                const filmesAdicionar = selectedMovies.filter(id => !filmesAtuaisIds.includes(id));
-                const filmesRemover = filmesAtuaisIds.filter(id => !selectedMovies.includes(id));
-
-                // Chama a função editarFilmes
-                const editarFilmesResponse = await fetch(`http://localhost:3000/listas/${listaId}/editarFilmes`, {
-                    method: "PUT",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({ filmesAdicionar, filmesRemover })
-                });
-
-                console.log(filmesRemover)
-                if (!editarFilmesResponse.ok) {
-                    throw new Error("Erro ao atualizar filmes da lista");
-                }
-
-                alert("Lista atualizada com sucesso!");
-                window.location.href = "listasUser.html";
-            } catch (error) {
-                console.error("Erro ao atualizar lista:", error);
-                alert("Erro ao atualizar lista");
-            }
-        });
-    } catch (error) {
-        console.error("Erro ao carregar dados da lista:", error);
-        alert("Erro ao carregar dados da lista");
+    
+    if (listaId) {
+        carregarDetalhesDaLista(listaId); // Carrega o nome da lista
+        carregarFilmesDaLista(listaId);   // Carrega os filmes da lista
+        carregarFilmesDisponiveis();      // Carrega os filmes disponíveis no dropdown
     }
 });

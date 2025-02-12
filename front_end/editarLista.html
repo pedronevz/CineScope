@@ -131,12 +131,19 @@
         <form id="editListForm">
             <label for="listName">Nome da Lista:</label>
             <input type="text" id="listName" name="listName" required>
-            
+    
+            <!-- Dropdown para selecionar filmes -->
+            <label for="filmesDropdown">Adicionar Filme:</label>
+            <select id="filmesDropdown">
+                <option value="">Selecione um filme</option>
+            </select>
+            <button type="button" id="btnAdicionarFilme">Adicionar Filme</button>
+    
+            <!-- Lista de filmes selecionados -->
             <div class="selected-movies" id="selectedMovies"></div>
-            
+    
             <button type="submit" class="btn-submit">Salvar Alterações</button>
         </form>
     </div>
     <script src="editarLista.js"></script>
-</body>
 </html>

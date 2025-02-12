@@ -145,13 +145,13 @@ export const removerFilmeDaLista = async (req, res) => {
     const { idLista, idFilme } = req.params;
 
     try {
-        const client = await pool.connect();
         const query = 'DELETE FROM filmes_listas WHERE idLista = $1 AND idFilme = $2;';
-        await client.query(query, [idLista, idFilme]);
-        res.status(204).send();
+        await pool.query(query, [idLista, idFilme]);
+
+        res.status(204).send(); 
     } catch (err) {
         console.error(err.message);
-        res.status(500).send('Erro ao remover filme da lista');
+        res.status(500).json({ erro: 'Erro ao remover filme da lista' });
     }
 };
 
@@ -175,7 +175,7 @@ export const removerLista = async (req, res) => {
         console.error(err.message);
         res.status(500).send('Erro ao remover lista');
     }
-};
+}; 
 
 // UPDATE
 export const editarLista = async (req, res) => {
