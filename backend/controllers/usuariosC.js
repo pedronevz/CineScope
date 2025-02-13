@@ -7,13 +7,13 @@ export const criarUsuario = async (req, res) => {
         const { nome, email, senha, data, bio } = req.body;
 
         // Verifica se o nome já existe
-        const nomeExiste = await pool.query('SELECT * FROM usuarios WHERE nome = $1', [nome]);
+        const nomeExiste = await pool.query('SELECT * FROM usuario_seguro_view WHERE nome = $1', [nome]);
         if(nomeExiste.rows.length !== 0){
             return res.status(404).json({ erro: 'Nome já existente!' });
         }
 
         // Verifica se o email já existe
-        const emailExiste = await pool.query('SELECT * FROM usuarios WHERE nome = $1', [nome]);
+        const emailExiste = await pool.query('SELECT * FROM usuario_seguro_view WHERE nome = $1', [nome]);
         if(emailExiste.rows.length !== 0){
             return res.status(404).json({ erro: 'Email já existente!' });
         }
@@ -33,7 +33,7 @@ export const criarUsuario = async (req, res) => {
 // READ
 export const obterUsuarios = async (req, res) => {
     try {
-        const todosUsuarios = await pool.query('SELECT * FROM usuarios');
+        const todosUsuarios = await pool.query('SELECT * FROM usuario_seguro_view');
         res.json(todosUsuarios.rows);
 
         if(todosUsuarios.rows.length === 0){
@@ -45,7 +45,7 @@ export const obterUsuarios = async (req, res) => {
         res.status(500).send('Erro no servidor');
     }
 };
-
+/*
 export const obterUsuariosSeguro = async (req, res) => {
     try {
         const todosUsuarios = await pool.query('SELECT * FROM usuario_seguro_view');
@@ -60,11 +60,11 @@ export const obterUsuariosSeguro = async (req, res) => {
         res.status(500).send('Erro no servidor');
     }
 };
-
+*/
 export const obterUsuarioPorId = async (req, res) => {
     try {
         const { id } = req.params;
-        const usuario = await pool.query('SELECT * FROM usuarios WHERE id = $1', [id]);
+        const usuario = await pool.query('SELECT * FROM usuario_seguro_view WHERE id = $1', [id]);
         res.json(usuario.rows[0]);
 
         if(usuario.rows.length === 0){
@@ -113,7 +113,7 @@ export const atualizarUsuario = async (req, res) => {
         const valores = [];
 
         // Verifica se o usuário existe
-        const usuario = await pool.query('SELECT * FROM usuarios WHERE id = $1', [id]);
+        const usuario = await pool.query('SELECT * FROM usuario_seguro_view WHERE id = $1', [id]);
         if (usuario.rows.length === 0) {
             return res.status(404).json({ erro: 'Usuário não encontrado' });
         }
@@ -163,7 +163,7 @@ export const deletarUsuario = async (req, res) => {
         const { id } = req.params;
 
         // Verifica se o usuário existe
-        const usuario = await pool.query('SELECT * FROM usuarios WHERE id = $1', [id]);
+        const usuario = await pool.query('SELECT * FROM usuario_seguro_view WHERE id = $1', [id]);
         if (usuario.rows.length === 0) {
             return res.status(404).json({ erro: 'Usuário não encontrado' });
         }

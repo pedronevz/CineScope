@@ -66,7 +66,7 @@ export const obterFilmeDetalhado = async (req, res) => {
         // Busca as reviews
         const reviewsQuery = `
             SELECT r.nota, r.texto, u.nome AS usuario
-            FROM reviews r
+            FROM reviews_ordered r
             JOIN usuarios u ON r.idUsuario = u.id
             WHERE r.idFilme = $1;
         `;

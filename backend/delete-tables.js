@@ -36,7 +36,9 @@ async function dropTables() {
         DROP TABLE IF EXISTS reviews CASCADE;
         DROP TABLE IF EXISTS filmes CASCADE;
         DROP TABLE IF EXISTS usuarios CASCADE;
-        DROP TABLE IF EXISTS generos CASCADE;`);
+        DROP TABLE IF EXISTS generos CASCADE;
+        DROP VIEW IF EXISTS usuario_seguro_view CASCADE;
+        DROP VIEW IF EXISTS reviews_ordered CASCADE;`);
         console.log('Todas as tabelas foram deletadas com sucesso!');
     } catch (err) {
         console.error('Erro ao deletar tabelas:', err.message);

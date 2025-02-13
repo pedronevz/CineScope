@@ -191,9 +191,33 @@ async function createTables() {
         `);
 
         await client.query(`
-            CREATE FUNCTION login_usuario(p_nome VARCHAR(30), p_senha VARCHAR(30))
+            CREATE VIEW reviews_ordered AS 
+                SELECT *
+                FROM reviews
+                ORDER BY nota DESC;
+        `);
+
+        await client.query(`
+            CREATE OR REPLACE PROCEDURE update_filme_nota(p_filme_id INT)
+            LANGUAGE plpgsql AS $$
+            DECLARE
+                tmp NUMERIC;
+            BEGIN
+                SELECT ROUND(AVG(nota)::numeric, 3) 
+                FROM reviews WHERE idfilme = p_filme_id
+                INTO tmp;
+                
+                UPDATE filmes 
+                SET nota_media = (tmp)
+                WHERE id = p_filme_id;
+            END;
+            $$;
+        `);
+
+        await client.query(`
+            CREATE OR REPLACE FUNCTION login_usuario(p_nome VARCHAR(30), p_senha VARCHAR(30))
             RETURNS SETOF usuarios AS
-            $func$
+            $$
             DECLARE
                 usuarios_tmp usuarios;
             BEGIN
@@ -207,8 +231,8 @@ async function createTables() {
                     RETURN;
                 END IF;
             END;
-            $func$
-            LANGUAGE plpgsql;
+            $$ 
+            LANGUAGE plpgsql;  
         `);
 
         await client.query('COMMIT');
